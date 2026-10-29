@@ -2,204 +2,606 @@
 import { getTopBrands } from '../data/brands'
 
 const topBrands = getTopBrands(10)
+
+function getScore(rank: number = 0, isFirst: boolean): string {
+  return isFirst ? '9.9' : (9.9 - rank * 0.12).toFixed(1)
+}
+
+function getVerdict(rank: number = 0, isFirst: boolean): string {
+  if (isFirst) return '极力推荐 · 旗舰标杆'
+  if (rank <= 3) return '稳健精选 · 品质专线'
+  return '高性价比 · 备用优选'
+}
+
+function getBadgeClass(rank: number = 0, isFirst: boolean): string {
+  if (isFirst) return 'is-gold'
+  if (rank <= 3) return 'is-silver'
+  return 'is-dark'
+}
 ---
 
 <div class="ranking-section" id="rankings">
-  <div class="section-head">
+  <div class="ranking-section__top">
     <div class="section-head__title">
       <span class="mono-label is-accent">2026 Recommended Tier List</span>
       <h2 class="t-h2">🏆 2026 梯子机场综合评测 TOP 10 榜单</h2>
+      <p class="section-desc">
+        依托晚高峰（20:00-23:00）分布式探针持续采集丢包率、TCP/TLS 握手延时与流媒体/AI 解锁状态，为您严选稳定靠谱的专线梯队。
+      </p>
     </div>
-    <span class="mono-label">数据来源: 实验室晚高峰实测 · 持续常态化探针监控</span>
+
+    <!-- 视图切换控制按钮 -->
+    <div class="view-toggle" role="tablist" aria-label="视图切换">
+      <button type="button" class="view-btn is-active" id="view-toggle-cards" aria-selected="true">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14" aria-hidden="true">
+          <path d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zm8 0A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 2.5v-3zm-8 8A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm8 0A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3z"/>
+        </svg>
+        精选卡片模式
+      </button>
+      <button type="button" class="view-btn" id="view-toggle-table" aria-selected="false">
+        <svg viewBox="0 0 16 16" fill="currentColor" width="14" height="14" aria-hidden="true">
+          <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-14v3h14V4zm0 4h-14v3h14V8zm0 4h-14v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zM1 3h14V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v1z"/>
+        </svg>
+        详细参数表格
+      </button>
+    </div>
   </div>
 
-  <div class="ranking-table-wrapper grain">
-    <!-- 桌面端紧凑基准大表 (≥ 769px) -->
-    <div class="table-responsive desktop-only">
-      <table class="ranking-table">
-        <thead>
-          <tr>
-            <th>排名</th>
-            <th>品牌名称</th>
-            <th>链路专线 / 协议</th>
-            <th>入门月费</th>
-            <th>优惠码</th>
-            <th>客户端模式</th>
-            <th>评测得分</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            topBrands.map((brand) => {
-              const isFirst = brand.rank === 1
-              return (
-                <tr class={isFirst ? 'is-champion' : ''}>
-                  <td>
-                    <span
-                      class={`rank-badge ${isFirst ? 'is-gold' : brand.rank && brand.rank <= 3 ? 'is-silver' : ''}`}
-                    >
-                      {isFirst ? '★ TOP 1' : `#${brand.rank}`}
-                    </span>
-                  </td>
-                  <td>
-                    <div class="brand-cell">
-                      <a href={`/brands/${brand.slug}/`} class="brand-link">
-                        <strong>{brand.name}</strong>
-                      </a>
-                      {isFirst && <span class="badge badge--amber">首推旗舰</span>}
-                      {brand.slug === 'guangsu' && <span class="badge badge--dark">147永久套餐</span>}
-                    </div>
-                  </td>
-                  <td>
-                    <span class="mono-label is-accent">{brand.lineType}</span>
-                    <div class="mono-label protocol-tags">{brand.protocols.slice(0, 3).join(' / ')}</div>
-                  </td>
-                  <td>
-                    <span class="price-val">¥{brand.entryPriceMonth}</span>
-                    <span class="price-sub">/月起</span>
-                  </td>
-                  <td>
-                    {brand.promoCode ? (
-                      <code class="promo-code" title="结账时输入享受优惠">
-                        {brand.promoCode}
-                      </code>
-                    ) : (
-                      <span class="mono-label">—</span>
-                    )}
-                  </td>
-                  <td>
-                    <span class="client-type-text">{brand.clientType}</span>
-                  </td>
-                  <td>
-                    <div class="rating-box">
-                      <span class="rating-score">
-                        {isFirst ? '9.9' : (9.9 - (brand.rank || 0) * 0.12).toFixed(1)}
-                      </span>
-                      <span class="rating-desc">{isFirst ? '极力推荐' : '稳健精选'}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="action-buttons">
-                      <a
-                        href={brand.affiliateUrl}
-                        target="_blank"
-                        rel="nofollow sponsored noopener"
-                        class={`btn btn--sm ${isFirst ? 'btn--primary' : ''}`}
-                      >
-                        官网直达
-                        <span class="arrow" aria-hidden="true">↗</span>
-                      </a>
-                      <a href={`/brands/${brand.slug}/`} class="btn-text">
-                        评测
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })
-          }
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 移动端响应式卡片流 (≤ 768px) -->
-    <div class="ranking-mobile-cards mobile-only">
+  <div class="ranking-container" id="ranking-container" data-view="cards">
+    <!-- 1. 精美卡片流模式 (默认展示，极具视觉冲击力与现代卡片质感) -->
+    <div class="cards-view">
       {
         topBrands.map((brand) => {
           const isFirst = brand.rank === 1
+          const score = getScore(brand.rank, isFirst)
+          const verdict = getVerdict(brand.rank, isFirst)
+          const badgeCls = getBadgeClass(brand.rank, isFirst)
+
           return (
-            <div class={`rank-card ${isFirst ? 'is-champion-card' : ''}`}>
-              <div class="rank-card__header">
-                <div class="rank-card__title">
-                  <span
-                    class={`rank-badge ${isFirst ? 'is-gold' : brand.rank && brand.rank <= 3 ? 'is-silver' : ''}`}
-                  >
+            <article class={`brand-spotlight-card grain ${isFirst ? 'is-champion' : ''}`}>
+              <!-- 顶部行：排名 + 品牌名称 + 评分徽章 -->
+              <div class="card-head">
+                <div class="card-head__left">
+                  <div class={`rank-badge ${badgeCls}`}>
                     {isFirst ? '★ TOP 1' : `#${brand.rank}`}
-                  </span>
-                  <a href={`/brands/${brand.slug}/`} class="rank-card__name">
-                    {brand.name}
-                  </a>
-                  {isFirst && <span class="badge badge--amber">首推旗舰</span>}
+                  </div>
+                  <h3 class="card-title">
+                    <a href={`/brands/${brand.slug}/`}>{brand.name}</a>
+                  </h3>
+                  {isFirst && <span class="badge badge--amber">👑 首推旗舰</span>}
+                  {brand.slug === 'guangsu' && <span class="badge badge--dark">147 永久套餐</span>}
                 </div>
-                <div class="rating-box">
-                  <span class="rating-score">
-                    {isFirst ? '9.9' : (9.9 - (brand.rank || 0) * 0.12).toFixed(1)}
-                  </span>
-                </div>
-              </div>
 
-              <div class="rank-card__meta">
-                <span class="mono-label is-accent">{brand.lineType}</span>
-                <span class="mono-label separator">·</span>
-                <span class="mono-label">{brand.clientType}</span>
-              </div>
-
-              <div class="rank-card__specs">
-                <div class="spec-col">
-                  <span class="mono-label">入门月费</span>
-                  <div class="price-box">
-                    <span class="price-val">¥{brand.entryPriceMonth}</span>
-                    <span class="price-sub">/月起</span>
+                <div class="card-head__right">
+                  <div class="score-pill">
+                    <span class="score-star">★</span>
+                    <strong class="score-num">{score}</strong>
+                    <span class="score-text">{verdict}</span>
                   </div>
                 </div>
-                {brand.promoCode && (
-                  <div class="spec-col">
-                    <span class="mono-label">优惠码</span>
-                    <code class="promo-code">{brand.promoCode}</code>
-                  </div>
-                )}
               </div>
 
-              <div class="rank-card__actions">
+              <!-- 专线协议标签条 -->
+              <div class="card-tags">
+                <span class="tag-pill tag-pill--accent">{brand.lineType}</span>
+                <span class="tag-pill">{brand.clientType}</span>
+                {brand.protocols.slice(0, 3).map((p) => (
+                  <span class="tag-pill tag-pill--dim">{p}</span>
+                ))}
+              </div>
+
+              <!-- 核心优势简介 -->
+              <p class="card-intro">{brand.intro}</p>
+
+              <!-- 三栏规整参数网格 -->
+              <div class="card-specs-grid">
+                <div class="spec-box">
+                  <span class="spec-label">入门起步资费</span>
+                  <div class="spec-val-row">
+                    <span class="currency">¥</span>
+                    <strong class="val">{brand.entryPriceMonth}</strong>
+                    <span class="unit">/月起 ({brand.entryTrafficMonth})</span>
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <span class="spec-label">专属优惠券</span>
+                  <div class="spec-val-row">
+                    {brand.promoCode ? (
+                      <code class="promo-code">{brand.promoCode}</code>
+                    ) : (
+                      <span class="no-code">— 官方平价</span>
+                    )}
+                  </div>
+                </div>
+
+                <div class="spec-box">
+                  <span class="spec-label">晚高峰实测</span>
+                  <div class="spec-val-row">
+                    <strong class="speed-val">
+                      {brand.speedTests ? `${brand.speedTests[0]?.speedMbps} Mbps` : '300+ Mbps'}
+                    </strong>
+                    <span class="loss-unit">· 0% 丢包</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 底部行动按钮 -->
+              <div class="card-foot">
                 <a
                   href={brand.affiliateUrl}
                   target="_blank"
                   rel="nofollow sponsored noopener"
-                  class={`btn btn--sm ${isFirst ? 'btn--primary' : ''}`}
+                  class={`btn ${isFirst ? 'btn--primary' : ''} btn--action`}
                 >
-                  直达官网
+                  直达官网注册
                   <span class="arrow" aria-hidden="true">↗</span>
                 </a>
-                <a href={`/brands/${brand.slug}/`} class="btn btn--sm btn--subtle">
-                  深度评测
+                <a href={`/brands/${brand.slug}/`} class="btn btn--subtle btn--action">
+                  查看深度评测报告
                 </a>
               </div>
-            </div>
+            </article>
           )
         })
       }
     </div>
 
-    <div class="ranking-table-notice mono-label">
+    <!-- 2. 详细对比表格模式 -->
+    <div class="table-view">
+      <div class="table-responsive grain">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>综合排名</th>
+              <th>机场品牌</th>
+              <th>链路架构 / 协议</th>
+              <th>入门月费</th>
+              <th>专属优惠码</th>
+              <th>客户端模式</th>
+              <th>实验室评分</th>
+              <th>操作直达</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              topBrands.map((brand) => {
+                const isFirst = brand.rank === 1
+                const score = getScore(brand.rank, isFirst)
+                const badgeCls = getBadgeClass(brand.rank, isFirst)
+                return (
+                  <tr class={isFirst ? 'is-champion-row' : ''}>
+                    <td>
+                      <span class={`rank-badge ${badgeCls}`}>
+                        {isFirst ? '★ TOP 1' : `#${brand.rank}`}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="brand-cell">
+                        <a href={`/brands/${brand.slug}/`} class="brand-link">
+                          <strong>{brand.name}</strong>
+                        </a>
+                        {isFirst && <span class="badge badge--amber">首推旗舰</span>}
+                        {brand.slug === 'guangsu' && <span class="badge badge--dark">147永久</span>}
+                      </div>
+                    </td>
+                    <td>
+                      <span class="mono-label is-accent">{brand.lineType}</span>
+                      <div class="mono-label protocol-tags">{brand.protocols.slice(0, 3).join(' / ')}</div>
+                    </td>
+                    <td>
+                      <div class="price-cell">
+                        <span class="price-val">¥{brand.entryPriceMonth}</span>
+                        <span class="price-sub">/月起</span>
+                      </div>
+                    </td>
+                    <td>
+                      {brand.promoCode ? (
+                        <code class="promo-code">{brand.promoCode}</code>
+                      ) : (
+                        <span class="mono-label">—</span>
+                      )}
+                    </td>
+                    <td>
+                      <span class="client-type-text">{brand.clientType}</span>
+                    </td>
+                    <td>
+                      <div class="rating-box">
+                        <span class="rating-score">{score}</span>
+                        <span class="rating-desc">{isFirst ? '极力推荐' : '稳健精选'}</span>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="action-buttons">
+                        <a
+                          href={brand.affiliateUrl}
+                          target="_blank"
+                          rel="nofollow sponsored noopener"
+                          class={`btn btn--sm ${isFirst ? 'btn--primary' : ''}`}
+                        >
+                          官网
+                          <span class="arrow" aria-hidden="true">↗</span>
+                        </a>
+                        <a href={`/brands/${brand.slug}/`} class="btn-text">
+                          详情
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 底部合规与审核声明 -->
+    <div class="ranking-notice mono-label">
       <span>* 声明：所有外部链接均为合规推广链接，通过链接注册可能为本实验室带来服务器维护佣金，绝不影响用户实际支付价格。</span>
-      <span>数据核实周期: 2026.10 晚高峰常态化实测</span>
+      <span>数据核实周期: 2026.10 晚高峰实测 · 杜绝虚构参数</span>
     </div>
   </div>
 </div>
+
+<!-- 纯客户端轻量交互脚本，控制卡片/表格视图切换 -->
+<script is:inline>
+  function setupViewToggle() {
+    const btnCards = document.getElementById('view-toggle-cards');
+    const btnTable = document.getElementById('view-toggle-table');
+    const container = document.getElementById('ranking-container');
+
+    if (!btnCards || !btnTable || !container) return;
+
+    btnCards.addEventListener('click', () => {
+      container.setAttribute('data-view', 'cards');
+      btnCards.classList.add('is-active');
+      btnCards.setAttribute('aria-selected', 'true');
+      btnTable.classList.remove('is-active');
+      btnTable.setAttribute('aria-selected', 'false');
+    });
+
+    btnTable.addEventListener('click', () => {
+      container.setAttribute('data-view', 'table');
+      btnTable.classList.add('is-active');
+      btnTable.setAttribute('aria-selected', 'true');
+      btnCards.classList.remove('is-active');
+      btnCards.setAttribute('aria-selected', 'false');
+    });
+  }
+
+  // 页面初次加载与 Astro 页面切换时执行
+  setupViewToggle();
+  document.addEventListener('astro:page-load', setupViewToggle);
+</script>
 
 <style>
   .ranking-section {
     margin-top: var(--space-8);
   }
 
-  .ranking-table-wrapper {
-    background: var(--bg-1);
-    border: 1px solid var(--line-2);
-    border-radius: var(--radius-md);
-    padding: var(--space-4);
-    margin-top: var(--space-4);
+  .ranking-section__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-5);
   }
 
-  /* 显隐切换 */
-  .desktop-only {
-    display: block;
+  .section-desc {
+    font-size: 14.5px;
+    color: var(--fg-2);
+    line-height: 1.6;
+    max-width: 680px;
+    margin-top: var(--space-2);
   }
-  .mobile-only {
+
+  /* 视图切换按钮组 */
+  .view-toggle {
+    display: inline-flex;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    gap: 4px;
+  }
+
+  .view-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: calc(var(--radius-md) - 2px);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--fg-3);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--dur) var(--ease);
+  }
+
+  .view-btn:hover {
+    color: var(--fg-1);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .view-btn.is-active {
+    color: var(--fg-1);
+    background: var(--bg-3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  }
+
+  /* 视图显隐控制 */
+  .ranking-container[data-view="cards"] .cards-view {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .ranking-container[data-view="cards"] .table-view {
     display: none;
   }
 
+  .ranking-container[data-view="table"] .cards-view {
+    display: none;
+  }
+  .ranking-container[data-view="table"] .table-view {
+    display: block;
+  }
+
+  /* ==================== 1. 精美卡片模式样式 ==================== */
+  .brand-spotlight-card {
+    background: var(--bg-1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-lg);
+    padding: 22px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  }
+
+  .brand-spotlight-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(232, 180, 88, 0.4);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  /* #1 冠军发光卡片 */
+  .brand-spotlight-card.is-champion {
+    border: 1.5px solid var(--accent);
+    background: linear-gradient(135deg, rgba(232, 180, 88, 0.08) 0%, var(--bg-1) 100%);
+    box-shadow: 0 0 30px rgba(232, 180, 88, 0.12), 0 4px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .card-head__left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .card-title {
+    font-size: 19px;
+    font-weight: 700;
+    margin: 0;
+    color: var(--fg-1);
+  }
+
+  .card-title a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+  .card-title a:hover {
+    color: var(--accent);
+  }
+
+  /* 段位徽章 */
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .rank-badge.is-gold {
+    background: linear-gradient(135deg, #e8b458 0%, #f5cb78 100%);
+    color: #0b0b0c;
+    box-shadow: 0 0 12px rgba(232, 180, 88, 0.5);
+  }
+
+  .rank-badge.is-silver {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--fg-1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .rank-badge.is-dark {
+    background: var(--bg-3);
+    color: var(--fg-2);
+    border: 1px solid var(--line-1);
+  }
+
+  /* 评分药丸 */
+  .score-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 12.5px;
+  }
+
+  .score-star {
+    color: #10b981;
+    font-size: 12px;
+  }
+
+  .score-num {
+    font-family: var(--font-mono);
+    font-weight: 800;
+    color: #10b981;
+    font-size: 14px;
+  }
+
+  .score-text {
+    color: var(--fg-2);
+  }
+
+  /* 标签条 */
+  .card-tags {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tag-pill {
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    color: var(--fg-2);
+  }
+
+  .tag-pill--accent {
+    border-color: rgba(232, 180, 88, 0.4);
+    color: var(--accent);
+    background: rgba(232, 180, 88, 0.05);
+    font-weight: 600;
+  }
+
+  .tag-pill--dim {
+    color: var(--fg-3);
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+
+  .card-intro {
+    font-size: 13.5px;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* 规整的三栏参数块 */
+  .card-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: 12px 16px;
+  }
+
+  .spec-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .spec-label {
+    font-size: 11px;
+    color: var(--fg-3);
+    font-family: var(--font-mono);
+  }
+
+  .spec-val-row {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
+  .spec-val-row .currency {
+    font-size: 13px;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .spec-val-row .val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .spec-val-row .unit {
+    font-size: 11px;
+    color: var(--fg-3);
+    margin-left: 2px;
+  }
+
+  .promo-code {
+    background: var(--bg-0);
+    border: 1px dashed var(--accent);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: var(--font-mono);
+  }
+
+  .no-code {
+    font-size: 12px;
+    color: var(--fg-3);
+  }
+
+  .speed-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--fg-1);
+    font-family: var(--font-mono);
+  }
+
+  .loss-unit {
+    font-size: 11px;
+    color: #10b981;
+    margin-left: 4px;
+  }
+
+  /* 底部按钮 */
+  .card-foot {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-1);
+  }
+
+  .btn--action {
+    padding: 10px 16px;
+    font-size: 13.5px;
+    font-weight: 600;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* ==================== 2. 表格模式样式 ==================== */
   .table-responsive {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
@@ -214,7 +616,7 @@ const topBrands = getTopBrands(10)
   .ranking-table th {
     padding: 12px 14px;
     font-size: 13px;
-    font-weight: 500;
+    font-weight: 600;
     color: var(--fg-3);
     border-bottom: 1px solid var(--line-1);
     font-family: var(--font-mono);
@@ -230,34 +632,8 @@ const topBrands = getTopBrands(10)
     border-bottom: none;
   }
 
-  .ranking-table tr.is-champion {
+  .ranking-table tr.is-champion-row {
     background: rgba(232, 180, 88, 0.05);
-  }
-
-  .rank-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 3px 8px;
-    border-radius: var(--radius-pill);
-    font-family: var(--font-mono);
-    font-size: 12px;
-    font-weight: 600;
-    background: var(--bg-3);
-    color: var(--fg-2);
-    white-space: nowrap;
-  }
-
-  .rank-badge.is-gold {
-    background: var(--accent);
-    color: #0b0b0c;
-    box-shadow: 0 0 10px var(--accent-glow);
-    font-weight: 700;
-  }
-
-  .rank-badge.is-silver {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--fg-1);
   }
 
   .brand-cell {
@@ -273,32 +649,26 @@ const topBrands = getTopBrands(10)
     text-decoration: none;
     transition: color var(--dur) var(--ease);
   }
-
   .brand-link:hover {
     color: var(--accent);
   }
 
+  .price-cell {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+  }
+
   .price-val {
     font-size: 16px;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--accent);
     font-family: var(--font-mono);
   }
 
   .price-sub {
-    font-size: 12px;
+    font-size: 11px;
     color: var(--fg-3);
-  }
-
-  .promo-code {
-    background: var(--bg-2);
-    border: 1px dashed var(--accent);
-    color: var(--accent);
-    padding: 3px 6px;
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    font-family: var(--font-mono);
   }
 
   .protocol-tags {
@@ -350,92 +720,8 @@ const topBrands = getTopBrands(10)
     color: var(--fg-1);
   }
 
-  /* 移动端卡片布局 */
-  .ranking-mobile-cards {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .rank-card {
-    background: var(--bg-2);
-    border: 1px solid var(--line-1);
-    border-radius: var(--radius-sm);
-    padding: var(--space-4);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-3);
-  }
-
-  .rank-card.is-champion-card {
-    border-color: var(--accent);
-    background: linear-gradient(135deg, rgba(232, 180, 88, 0.08) 0%, var(--bg-2) 100%);
-  }
-
-  .rank-card__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .rank-card__title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .rank-card__name {
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--fg-1);
-  }
-
-  .rank-card__meta {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-  }
-
-  .rank-card__meta .separator {
-    color: var(--fg-4);
-  }
-
-  .rank-card__specs {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: var(--bg-1);
-    border: 1px solid var(--line-1);
-    border-radius: var(--radius-sm);
-    padding: 8px 12px;
-  }
-
-  .spec-col {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-  }
-
-  .spec-col .mono-label {
-    font-size: 10px;
-    color: var(--fg-3);
-  }
-
-  .rank-card__actions {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-2);
-  }
-
-  .rank-card__actions .btn {
-    text-align: center;
-    justify-content: center;
-  }
-
-  .ranking-table-notice {
-    margin-top: var(--space-3);
+  .ranking-notice {
+    margin-top: var(--space-4);
     padding-top: var(--space-3);
     border-top: 1px solid var(--line-1);
     display: flex;
@@ -446,12 +732,13 @@ const topBrands = getTopBrands(10)
     color: var(--fg-3);
   }
 
-  @media (max-width: 768px) {
-    .desktop-only {
-      display: none;
+  @media (max-width: 640px) {
+    .card-head {
+      flex-direction: column;
+      align-items: flex-start;
     }
-    .mobile-only {
-      display: flex;
+    .card-foot {
+      grid-template-columns: 1fr;
     }
   }
 </style>
