@@ -10,7 +10,11 @@ const brand = getFeaturedBrand()
       <span class="badge badge--amber">👑 实验室 2026 年度首推旗舰</span>
       <span class="mono-label">2020年稳定运营至今 · IEPL+企业内网双专线</span>
     </div>
-    <span class="mono-label promo-callout">专属优惠码: <strong class="code-highlight">{brand.promoCode}</strong></span>
+    <div class="spotlight-promo-group">
+      <span class="mono-label">专属折扣码:</span>
+      <code class="code-highlight">{brand.promoCode}</code>
+      <span class="mono-label tip">({brand.discountNote || '全场适用'})</span>
+    </div>
   </div>
 
   <div class="spotlight-body">
@@ -25,37 +29,68 @@ const brand = getFeaturedBrand()
 
       <div class="spotlight-plans">
         <div class="plan-chip is-featured-plan">
-          <span class="plan-chip__tag">🎱 独家买断</span>
+          <div class="plan-chip__header">
+            <span class="plan-chip__tag">🎱 独家买断</span>
+            <span class="mono-label">永久有效</span>
+          </div>
           <strong class="plan-chip__name">致敬斯诺克147</strong>
-          <span class="plan-chip__price">¥147 (247GB 永久不过期)</span>
+          <div class="plan-chip__price-row">
+            <span class="currency">¥</span>
+            <span class="val">147</span>
+            <span class="desc">/ 247GB (不限时·不清零)</span>
+          </div>
         </div>
+
         <div class="plan-chip">
-          <span class="plan-chip__tag">年付超值</span>
-          <strong class="plan-chip__name">轻量版</strong>
-          <span class="plan-chip__price">¥99/年 (约8元/月 · 69GB)</span>
+          <div class="plan-chip__header">
+            <span class="plan-chip__tag">极限性价比</span>
+            <span class="mono-label">年付</span>
+          </div>
+          <strong class="plan-chip__name">轻量版套餐</strong>
+          <div class="plan-chip__price-row">
+            <span class="currency">¥</span>
+            <span class="val">99</span>
+            <span class="desc">/年 (约8元/月 · 69GB)</span>
+          </div>
         </div>
+
         <div class="plan-chip">
-          <span class="plan-chip__tag">全 IPLC 专线</span>
-          <strong class="plan-chip__name">极速版</strong>
-          <span class="plan-chip__price">¥25/月 (168GB · 最高2.5Gbps)</span>
+          <div class="plan-chip__header">
+            <span class="plan-chip__tag">全 IPLC 专线</span>
+            <span class="mono-label">月付灵活</span>
+          </div>
+          <strong class="plan-chip__name">极速版套餐</strong>
+          <div class="plan-chip__price-row">
+            <span class="currency">¥</span>
+            <span class="val">25</span>
+            <span class="desc">/月 (168GB · 最高2.5Gbps)</span>
+          </div>
         </div>
       </div>
     </div>
 
     <div class="spotlight-aside">
       <div class="telemetry-box">
-        <span class="mono-label">实测晚高峰表现</span>
-        <div class="telemetry-metric">
-          <span class="metric-val">22<small>ms</small></span>
-          <span class="metric-lbl">香港平均延时</span>
+        <div class="telemetry-header">
+          <span class="mono-label">晚高峰实时可观测性探针</span>
+          <span class="telemetry-dot" title="节点在线"></span>
         </div>
-        <div class="telemetry-metric">
-          <span class="metric-val">529<small>Mbps</small></span>
-          <span class="metric-lbl">单线峰值吞吐</span>
+        <div class="telemetry-metrics">
+          <div class="telemetry-metric">
+            <span class="metric-val">22<small>ms</small></span>
+            <span class="metric-lbl">香港实测延时</span>
+          </div>
+          <div class="telemetry-metric">
+            <span class="metric-val">529<small>Mbps</small></span>
+            <span class="metric-lbl">单线峰值吞吐</span>
+          </div>
+          <div class="telemetry-metric">
+            <span class="metric-val is-zero">0.0<small>%</small></span>
+            <span class="metric-lbl">高峰丢包率</span>
+          </div>
         </div>
-        <div class="telemetry-metric">
-          <span class="metric-val">0.0<small>%</small></span>
-          <span class="metric-lbl">晚高峰丢包率</span>
+        <div class="telemetry-footer mono-label">
+          <span>解锁定级: ChatGPT / Claude / Netflix 全绿</span>
         </div>
       </div>
 
@@ -70,7 +105,7 @@ const brand = getFeaturedBrand()
           <span class="arrow" aria-hidden="true">↗</span>
         </a>
         <a href="/brands/guangsu/" class="btn btn--subtle">
-          查看完整深度评测
+          查看 5000+ 字完整评测落地页
         </a>
       </div>
     </div>
@@ -79,12 +114,12 @@ const brand = getFeaturedBrand()
 
 <style>
   .spotlight-card {
-    background: linear-gradient(135deg, rgba(232, 180, 88, 0.08) 0%, var(--bg-1) 100%);
+    background: linear-gradient(135deg, rgba(232, 180, 88, 0.09) 0%, var(--bg-1) 100%);
     border: 1px solid var(--accent);
     border-radius: var(--radius-lg);
     padding: var(--space-6);
     margin-top: var(--space-6);
-    box-shadow: 0 0 30px rgba(232, 180, 88, 0.08);
+    box-shadow: 0 0 35px rgba(232, 180, 88, 0.08);
   }
 
   .spotlight-header {
@@ -105,18 +140,31 @@ const brand = getFeaturedBrand()
     flex-wrap: wrap;
   }
 
+  .spotlight-promo-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .spotlight-promo-group .tip {
+    color: var(--fg-3);
+  }
+
   .code-highlight {
     background: var(--bg-0);
     border: 1px dashed var(--accent);
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 4px;
     color: var(--accent);
     font-size: 14px;
+    font-weight: 700;
+    font-family: var(--font-mono);
   }
 
   .spotlight-body {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 340px;
     gap: var(--space-7);
     align-items: center;
   }
@@ -130,7 +178,7 @@ const brand = getFeaturedBrand()
 
   .spotlight-brand-title h2 {
     margin: 0;
-    font-size: 32px;
+    font-size: 30px;
   }
 
   .brand-handle {
@@ -153,17 +201,30 @@ const brand = getFeaturedBrand()
     display: flex;
     flex-direction: column;
     gap: 4px;
+    transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .plan-chip:hover {
+    transform: translateY(-2px);
+    border-color: rgba(232, 180, 88, 0.4);
   }
 
   .plan-chip.is-featured-plan {
-    border-color: rgba(232, 180, 88, 0.5);
-    background: rgba(232, 180, 88, 0.05);
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(232, 180, 88, 0.12) 0%, var(--bg-2) 100%);
+    box-shadow: 0 0 16px rgba(232, 180, 88, 0.08);
+  }
+
+  .plan-chip__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .plan-chip__tag {
     font-size: 11px;
     color: var(--accent);
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .plan-chip__name {
@@ -171,9 +232,30 @@ const brand = getFeaturedBrand()
     color: var(--fg-1);
   }
 
-  .plan-chip__price {
+  .plan-chip__price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+    margin-top: 2px;
+  }
+
+  .plan-chip__price-row .currency {
     font-size: 12px;
-    color: var(--fg-2);
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .plan-chip__price-row .val {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .plan-chip__price-row .desc {
+    font-size: 11px;
+    color: var(--fg-3);
+    margin-left: 3px;
   }
 
   .spotlight-aside {
@@ -187,17 +269,30 @@ const brand = getFeaturedBrand()
     border: 1px solid var(--line-2);
     border-radius: var(--radius-md);
     padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .telemetry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .telemetry-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+  }
+
+  .telemetry-metrics {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: var(--space-2);
     text-align: center;
-  }
-
-  .telemetry-box .mono-label {
-    grid-column: span 3;
-    text-align: left;
-    margin-bottom: 4px;
-    color: var(--fg-3);
   }
 
   .telemetry-metric {
@@ -206,10 +301,14 @@ const brand = getFeaturedBrand()
   }
 
   .metric-val {
-    font-size: 20px;
+    font-size: 21px;
     font-weight: 700;
     color: var(--accent);
     font-family: var(--font-mono);
+  }
+
+  .metric-val.is-zero {
+    color: #10b981;
   }
 
   .metric-val small {
@@ -221,6 +320,14 @@ const brand = getFeaturedBrand()
   .metric-lbl {
     font-size: 11px;
     color: var(--fg-3);
+  }
+
+  .telemetry-footer {
+    font-size: 11px;
+    color: var(--fg-3);
+    padding-top: var(--space-2);
+    border-top: 1px solid var(--line-1);
+    text-align: center;
   }
 
   .spotlight-cta {

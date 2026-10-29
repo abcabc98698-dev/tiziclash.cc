@@ -10,21 +10,22 @@ const topBrands = getTopBrands(10)
       <span class="mono-label is-accent">2026 Recommended Tier List</span>
       <h2 class="t-h2">🏆 2026 梯子机场综合评测 TOP 10 榜单</h2>
     </div>
-    <span class="mono-label">数据来源: 实验室晚高峰实测 · 严格遵循规范</span>
+    <span class="mono-label">数据来源: 实验室晚高峰实测 · 持续常态化探针监控</span>
   </div>
 
   <div class="ranking-table-wrapper grain">
-    <div class="table-responsive">
+    <!-- 桌面端紧凑基准大表 (≥ 769px) -->
+    <div class="table-responsive desktop-only">
       <table class="ranking-table">
         <thead>
           <tr>
             <th>排名</th>
             <th>品牌名称</th>
-            <th>专线架构 / 协议</th>
+            <th>链路专线 / 协议</th>
             <th>入门月费</th>
-            <th>专属优惠码</th>
+            <th>优惠码</th>
             <th>客户端模式</th>
-            <th>实验室评分</th>
+            <th>评测得分</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -35,7 +36,9 @@ const topBrands = getTopBrands(10)
               return (
                 <tr class={isFirst ? 'is-champion' : ''}>
                   <td>
-                    <span class={`rank-badge ${isFirst ? 'is-gold' : brand.rank && brand.rank <= 3 ? 'is-silver' : ''}`}>
+                    <span
+                      class={`rank-badge ${isFirst ? 'is-gold' : brand.rank && brand.rank <= 3 ? 'is-silver' : ''}`}
+                    >
                       {isFirst ? '★ TOP 1' : `#${brand.rank}`}
                     </span>
                   </td>
@@ -50,7 +53,7 @@ const topBrands = getTopBrands(10)
                   </td>
                   <td>
                     <span class="mono-label is-accent">{brand.lineType}</span>
-                    <div class="mono-label protocol-tags">{brand.protocols.join(' / ')}</div>
+                    <div class="mono-label protocol-tags">{brand.protocols.slice(0, 3).join(' / ')}</div>
                   </td>
                   <td>
                     <span class="price-val">¥{brand.entryPriceMonth}</span>
@@ -58,7 +61,7 @@ const topBrands = getTopBrands(10)
                   </td>
                   <td>
                     {brand.promoCode ? (
-                      <code class="promo-code" title="点击注册时填入享受折扣">
+                      <code class="promo-code" title="结账时输入享受优惠">
                         {brand.promoCode}
                       </code>
                     ) : (
@@ -70,7 +73,9 @@ const topBrands = getTopBrands(10)
                   </td>
                   <td>
                     <div class="rating-box">
-                      <span class="rating-score">{isFirst ? '9.9' : (9.9 - (brand.rank || 0) * 0.12).toFixed(1)}</span>
+                      <span class="rating-score">
+                        {isFirst ? '9.9' : (9.9 - (brand.rank || 0) * 0.12).toFixed(1)}
+                      </span>
                       <span class="rating-desc">{isFirst ? '极力推荐' : '稳健精选'}</span>
                     </div>
                   </td>
@@ -86,7 +91,7 @@ const topBrands = getTopBrands(10)
                         <span class="arrow" aria-hidden="true">↗</span>
                       </a>
                       <a href={`/brands/${brand.slug}/`} class="btn-text">
-                        评测详情
+                        评测
                       </a>
                     </div>
                   </td>
@@ -98,9 +103,77 @@ const topBrands = getTopBrands(10)
       </table>
     </div>
 
+    <!-- 移动端响应式卡片流 (≤ 768px) -->
+    <div class="ranking-mobile-cards mobile-only">
+      {
+        topBrands.map((brand) => {
+          const isFirst = brand.rank === 1
+          return (
+            <div class={`rank-card ${isFirst ? 'is-champion-card' : ''}`}>
+              <div class="rank-card__header">
+                <div class="rank-card__title">
+                  <span
+                    class={`rank-badge ${isFirst ? 'is-gold' : brand.rank && brand.rank <= 3 ? 'is-silver' : ''}`}
+                  >
+                    {isFirst ? '★ TOP 1' : `#${brand.rank}`}
+                  </span>
+                  <a href={`/brands/${brand.slug}/`} class="rank-card__name">
+                    {brand.name}
+                  </a>
+                  {isFirst && <span class="badge badge--amber">首推旗舰</span>}
+                </div>
+                <div class="rating-box">
+                  <span class="rating-score">
+                    {isFirst ? '9.9' : (9.9 - (brand.rank || 0) * 0.12).toFixed(1)}
+                  </span>
+                </div>
+              </div>
+
+              <div class="rank-card__meta">
+                <span class="mono-label is-accent">{brand.lineType}</span>
+                <span class="mono-label separator">·</span>
+                <span class="mono-label">{brand.clientType}</span>
+              </div>
+
+              <div class="rank-card__specs">
+                <div class="spec-col">
+                  <span class="mono-label">入门月费</span>
+                  <div class="price-box">
+                    <span class="price-val">¥{brand.entryPriceMonth}</span>
+                    <span class="price-sub">/月起</span>
+                  </div>
+                </div>
+                {brand.promoCode && (
+                  <div class="spec-col">
+                    <span class="mono-label">优惠码</span>
+                    <code class="promo-code">{brand.promoCode}</code>
+                  </div>
+                )}
+              </div>
+
+              <div class="rank-card__actions">
+                <a
+                  href={brand.affiliateUrl}
+                  target="_blank"
+                  rel="nofollow sponsored noopener"
+                  class={`btn btn--sm ${isFirst ? 'btn--primary' : ''}`}
+                >
+                  直达官网
+                  <span class="arrow" aria-hidden="true">↗</span>
+                </a>
+                <a href={`/brands/${brand.slug}/`} class="btn btn--sm btn--subtle">
+                  深度评测
+                </a>
+              </div>
+            </div>
+          )
+        })
+      }
+    </div>
+
     <div class="ranking-table-notice mono-label">
       <span>* 声明：所有外部链接均为合规推广链接，通过链接注册可能为本实验室带来服务器维护佣金，绝不影响用户实际支付价格。</span>
-      <span>数据核实周期: 2026.10</span>
+      <span>数据核实周期: 2026.10 晚高峰常态化实测</span>
     </div>
   </div>
 </div>
@@ -116,6 +189,14 @@ const topBrands = getTopBrands(10)
     border-radius: var(--radius-md);
     padding: var(--space-4);
     margin-top: var(--space-4);
+  }
+
+  /* 显隐切换 */
+  .desktop-only {
+    display: block;
+  }
+  .mobile-only {
+    display: none;
   }
 
   .table-responsive {
@@ -136,6 +217,7 @@ const topBrands = getTopBrands(10)
     font-weight: 500;
     color: var(--fg-3);
     border-bottom: 1px solid var(--line-1);
+    font-family: var(--font-mono);
   }
 
   .ranking-table td {
@@ -149,7 +231,7 @@ const topBrands = getTopBrands(10)
   }
 
   .ranking-table tr.is-champion {
-    background: rgba(232, 180, 88, 0.04);
+    background: rgba(232, 180, 88, 0.05);
   }
 
   .rank-badge {
@@ -163,12 +245,14 @@ const topBrands = getTopBrands(10)
     font-weight: 600;
     background: var(--bg-3);
     color: var(--fg-2);
+    white-space: nowrap;
   }
 
   .rank-badge.is-gold {
     background: var(--accent);
     color: #0b0b0c;
     box-shadow: 0 0 10px var(--accent-glow);
+    font-weight: 700;
   }
 
   .rank-badge.is-silver {
@@ -213,6 +297,8 @@ const topBrands = getTopBrands(10)
     padding: 3px 6px;
     border-radius: 4px;
     font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-mono);
   }
 
   .protocol-tags {
@@ -264,6 +350,90 @@ const topBrands = getTopBrands(10)
     color: var(--fg-1);
   }
 
+  /* 移动端卡片布局 */
+  .ranking-mobile-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .rank-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .rank-card.is-champion-card {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(232, 180, 88, 0.08) 0%, var(--bg-2) 100%);
+  }
+
+  .rank-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rank-card__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .rank-card__name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--fg-1);
+  }
+
+  .rank-card__meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+
+  .rank-card__meta .separator {
+    color: var(--fg-4);
+  }
+
+  .rank-card__specs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+  }
+
+  .spec-col {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .spec-col .mono-label {
+    font-size: 10px;
+    color: var(--fg-3);
+  }
+
+  .rank-card__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2);
+  }
+
+  .rank-card__actions .btn {
+    text-align: center;
+    justify-content: center;
+  }
+
   .ranking-table-notice {
     margin-top: var(--space-3);
     padding-top: var(--space-3);
@@ -274,5 +444,14 @@ const topBrands = getTopBrands(10)
     gap: var(--space-2);
     font-size: 12px;
     color: var(--fg-3);
+  }
+
+  @media (max-width: 768px) {
+    .desktop-only {
+      display: none;
+    }
+    .mobile-only {
+      display: flex;
+    }
   }
 </style>
