@@ -7,6 +7,7 @@ export default defineConfig({
   // SITE_URL lets a host override the origin per environment (demo, preview)
   // without editing src/data/site.ts.
   site: process.env.SITE_URL ?? site.url,
+  trailingSlash: 'always',
   build: {
     // Keep CSS in external files so the CSP can stay at `style-src 'self'`.
     inlineStylesheets: 'never',

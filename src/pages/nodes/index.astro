@@ -1,0 +1,279 @@
+---
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '2026 全球节点分布与晚高峰延迟实测 · 香港/日本/新加坡/美国节点优选 - 梯子Clash'
+const pageDesc =
+  '实验室常态化监控全球主要数据中心节点（香港HK、日本JP、新加坡SG、美国US）在电信、联通、移动三网下的晚高峰延迟、丢包率与流媒体AI解锁纯净度。'
+
+const nodeHubs = [
+  {
+    region: '中国香港 (Hong Kong - HK)',
+    latency: '15 ~ 35 ms',
+    advantage: '物理距离最近，网页秒开、无感日常冲浪与中文本土流媒体首选。',
+    trafficType: '轻量办公 / 网页浏览 / 哔哩哔哩港澳台',
+    ispFriendly: '电信 CN2 / 联通 9929 / 移动 CMIN2 全极速',
+  },
+  {
+    region: '日本东京 (Tokyo - JP)',
+    latency: '35 ~ 55 ms',
+    advantage: '国际出口骨干带宽极大，访问 Google、YouTube 与日区二次元游戏延迟极低。',
+    trafficType: '4K/8K 极限高码率影音 / Steam 日服 / 游戏联机',
+    ispFriendly: '联通 AS4837 / 电信 163 优化良好',
+  },
+  {
+    region: '新加坡 (Singapore - SG)',
+    latency: '45 ~ 65 ms',
+    advantage: '东南亚区域核心数据中心，TikTok 跨境出海与东南亚外贸商务必备节点。',
+    trafficType: 'TikTok 直播带货 / 东南亚电商 / 跨国协作',
+    ispFriendly: '移动 CMIN2 直连延迟极佳',
+  },
+  {
+    region: '美国西海岸 (US West - LA/SJC)',
+    latency: '120 ~ 150 ms',
+    advantage: '原生住宅 IP 丰富，ChatGPT、Claude、Midjourney 及全美区流媒体解锁最全。',
+    trafficType: 'AI 大模型开发 / Netflix美区 / Stripe跨境金融',
+    ispFriendly: '海缆直达，大并发吞吐极其平稳',
+  },
+]
+
+const faqList = [
+  {
+    q: '为什么香港节点延迟最低，但有时看 YouTube 反而不如日本或美国快？',
+    a: '因为延迟（Ping/RTT）只代表数据包往返的物理时间，而速度（Bandwidth）取决于国际出口的总带宽余量。香港节点因为距离大陆最近，承载了全国 60% 以上的日常流量，在晚高峰很容易遭遇出口拥塞；而日本与美国西海岸的数据中心拥有上百 Gbps 的冗余大带宽，在大码率 4K 视频缓冲上反而更具突发优势。',
+  },
+  {
+    q: '使用 ChatGPT 应该优先选择哪个地区的节点？',
+    a: '首选美国原生住宅 IP 节点，其次是新加坡或日本节点。绝对避免使用被万人滥用的普通机房香港 IP（OpenAI 官方目前未在香港提供服务，直接报错 Access Denied）。建议使用具备住宅双 ISP 标签的专线节点（如光速云美区/日区专线）。',
+  },
+]
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '全球节点测速分布', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      headline: pageTitle,
+      description: pageDesc,
+      url: currentUrl,
+      inLanguage: 'zh-CN',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqList.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a,
+        },
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>全球节点分布实测</span>
+    </nav>
+
+    <header class="page-head">
+      <div class="page-head__title-group">
+        <span class="mono-label is-accent">Global PoP & Low Latency Architecture</span>
+        <h1 class="t-h1">全球节点网络分布、三网延迟与流媒体解锁实测中心</h1>
+      </div>
+      <p class="t-lead">
+        全景解析香港、日本、新加坡、美国核心节点机房在电信、联通、移动宽带下的晚高峰真实延迟、物理骨干走向与业务选型建议。
+      </p>
+    </header>
+
+    <!-- 核心建议速览 -->
+    <aside class="tldr-box grain">
+      <div class="tldr-badge mono-label">Routing Advice · 节点选型结论</div>
+      <div class="tldr-grid">
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">日常网页与极速交互</span>
+          <strong class="tldr-v">香港 (HK) · 15~35ms 物理极速</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">4K 极限大码率影音</span>
+          <strong class="tldr-v">日本 (JP) · 冗余大带宽无缓冲</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">ChatGPT / Claude 生产力</span>
+          <strong class="tldr-v">美国 (US) · 双 ISP 原生家宽防封</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">跨境电商与 TikTok</span>
+          <strong class="tldr-v">新加坡 (SG) · 干净住宅原生网络</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 全球节点矩阵详细评测 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Latency & Routing Analysis</span>
+          <h2 class="t-h2">🌐 核心枢纽节点实测与运营商兼容性报告</h2>
+        </div>
+      </div>
+
+      <div class="nodes-grid">
+        {
+          nodeHubs.map((n) => (
+            <div class="node-card grain">
+              <div class="node-card__header">
+                <h3 class="node-region">{n.region}</h3>
+                <span class="node-latency mono-label">{n.latency}</span>
+              </div>
+              <p class="prose node-adv">{n.advantage}</p>
+              <div class="node-specs">
+                <div>
+                  <span class="mono-label">推荐业务:</span>
+                  <span class="t-small">{n.trafficType}</span>
+                </div>
+                <div>
+                  <span class="mono-label">三网匹配:</span>
+                  <span class="t-small is-accent">{n.ispFriendly}</span>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 常见问题 (FAQ) -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Node Optimization FAQ</span>
+          <h2 class="t-h2">💡 节点延迟与速度常见问答 (FAQ)</h2>
+        </div>
+      </div>
+
+      <div class="faq-list">
+        {
+          faqList.map((item, idx) => (
+            <details class="faq-item grain" open={idx === 0}>
+              <summary class="faq-summary">
+                <span class="faq-q-text">
+                  <span class="faq-q-badge mono-label">Q{idx + 1}</span> {item.q}
+                </span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p class="prose">{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .nodes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .node-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .node-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+  .node-region {
+    font-size: 16px;
+    margin: 0;
+    color: var(--fg-1);
+  }
+  .node-latency {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .node-adv {
+    font-size: 13px;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+  }
+  .node-specs {
+    border-top: 1px solid var(--line-1);
+    padding-top: var(--space-3);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .node-specs div {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .faq-item {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q-badge {
+    color: var(--accent);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .faq-answer {
+    padding: 12px 16px 16px 16px;
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.7;
+    border-top: 1px dashed var(--line-1);
+  }
+</style>

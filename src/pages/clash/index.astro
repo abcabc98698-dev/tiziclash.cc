@@ -1,0 +1,346 @@
+---
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = 'Clash 全平台客户端下载与配置教程 · 节点订阅转换与分流规则全解 - 梯子Clash'
+const pageDesc =
+  '针对 Windows、macOS、Android 平台主流 Clash 客户端（Clash Verge Rev、Clash Nyanpasu、FlClash、OpenClash）的保姆级使用教程与订阅导入、分流覆写指南。'
+
+const clashClients = [
+  {
+    name: 'Clash Verge Rev',
+    platform: 'Windows / macOS / Linux',
+    desc: '基于 Tauri 开发的现代跨平台客户端，内存占用低，原生内置 Meta (Mihomo) 内核与 TUN 虚拟网卡。',
+    tag: '主力首选',
+    github: 'https://github.com/clash-verge-rev/clash-verge-rev',
+  },
+  {
+    name: 'FlClash',
+    platform: 'Android / iOS / Desktop',
+    desc: '基于 Flutter 开发的高颜值多端代理工具，支持手机与电脑端统一体验，操作逻辑极其流畅。',
+    tag: '移动首选',
+    github: 'https://github.com/chen08209/FlClash',
+  },
+  {
+    name: 'OpenClash',
+    platform: 'OpenWrt 软路由',
+    desc: '专为家用路由器打造的透明代理网关插件，全屋设备（智能电视、游戏主机、手机）免客户端直接科学上网。',
+    tag: '软路由神器',
+    github: 'https://github.com/vernesong/OpenClash',
+  },
+]
+
+const faqList = [
+  {
+    q: '原版 Clash for Windows (CFW) 停更后，2026 年该用什么？',
+    a: '首选 Clash Verge Rev。原版 CFW 早已停更且内核陈旧；Clash Verge Rev 采用现代的 Mihomo (Meta) 内核，全面支持最新的 VLESS、Reality、Hysteria2 协议，且由开源社区活跃维护，安全性与稳定性最佳。',
+  },
+  {
+    q: '为什么开启 Clash 后，网页能打开，但终端命令行或某些特定软件不走代理？',
+    a: '因为普通系统代理（System Proxy）只接管遵循系统 HTTP/HTTPS 代理环境变量的软件（如浏览器）。若要让命令行（git/npm/curl）或游戏全量走代理，请在 Clash 设置中开启「TUN 模式（虚拟网卡模式）」，并确保授予管理员权限。',
+  },
+  {
+    q: 'Clash 的 Rule（规则分流）与 Global（全局）模式有什么区别？',
+    a: '推荐始终使用 Rule（规则模式）。在该模式下，国内网站（百度、淘宝、微信）自动走 DIRECT 直连，不浪费海外专线流量；海外受限网站（Google、YouTube、OpenAI）才走代理节点。而 Global 模式会将所有流量都发往海外节点，不仅浪费流量，更会导致国内银行或微信报异常异地登录。',
+  },
+]
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: 'Clash客户端指南', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      headline: pageTitle,
+      description: pageDesc,
+      url: currentUrl,
+      inLanguage: 'zh-CN',
+    },
+    {
+      '@type': 'HowTo',
+      name: 'Clash 订阅导入与开启科学上网极简三步',
+      description: '如何在任意 Clash 客户端中导入机场节点订阅并开启分流代理',
+      step: [
+        {
+          '@type': 'HowToStep',
+          position: 1,
+          name: '获取订阅链接',
+          text: '在优质专线机场（如光速云）控制台复制专属 Clash 订阅链接。',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 2,
+          name: '粘贴并下载配置',
+          text: '打开 Clash Verge Rev 的“配置”页面，粘贴链接并点击“下载/导入”。',
+        },
+        {
+          '@type': 'HowToStep',
+          position: 3,
+          name: '开启系统代理',
+          text: '在设置中勾选“系统代理”，在代理分组中选择节点即可无感翻墙。',
+        },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqList.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a,
+        },
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>Clash 专题教程</span>
+    </nav>
+
+    <header class="page-head">
+      <div class="page-head__title-group">
+        <span class="mono-label is-accent">Clash Meta Ecosystem & Guides</span>
+        <h1 class="t-h1">Clash 客户端下载、节点订阅配置与分流规则完全指南</h1>
+      </div>
+      <p class="t-lead">
+        全景解析主流 Clash 内核演进、正规客户端开源下载入口、3 步极速导入机场订阅及 TUN 模式故障排错方案。
+      </p>
+    </header>
+
+    <!-- 顶部导读卡片 -->
+    <aside class="tldr-box grain">
+      <div class="tldr-badge mono-label">Quick Overview · 核心建议</div>
+      <div class="tldr-grid">
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">电脑端首选软件</span>
+          <strong class="tldr-v">Clash Verge Rev (开源免费/Mihomo内核)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">推荐分流模式</span>
+          <strong class="tldr-v">Rule (规则分流 · 国内直连/国外代理)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">高阶必备功能</span>
+          <strong class="tldr-v">TUN 虚拟网卡 (让命令行与游戏接管代理)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">最佳节点搭配</span>
+          <strong class="tldr-v">光速云 IEPL 专线 (全协议免转换一键导入)</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 客户端下载矩阵 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Verified Open-Source Clients</span>
+          <h2 class="t-h2">💻 2026 推荐 Clash 开源客户端矩阵</h2>
+        </div>
+      </div>
+
+      <div class="clients-grid">
+        {
+          clashClients.map((c) => (
+            <div class="client-box grain">
+              <div class="client-box__head">
+                <h3 class="client-name">{c.name}</h3>
+                <span class="badge badge--amber">{c.tag}</span>
+              </div>
+              <span class="mono-label client-platform">{c.platform}</span>
+              <p class="prose client-desc">{c.desc}</p>
+              <div class="client-act">
+                <a href={c.github} target="_blank" rel="noopener noreferrer" class="btn btn--sm">
+                  GitHub 官方项目 ↗
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 3步上手实操 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Step-by-Step Setup</span>
+          <h2 class="t-h2">🛠️ Clash 订阅导入极简 3 步教程</h2>
+        </div>
+      </div>
+
+      <div class="steps-flow">
+        <div class="step-card grain">
+          <span class="mono-label step-index">STEP 01</span>
+          <h3 class="step-title">获取机场订阅链接</h3>
+          <p class="prose">
+            在专线服务商（推荐 <a href="/brands/guangsu/">光速云</a> 或 <a href="/brands/weifeng/">微风网络</a>）后台复制对应的“Clash 订阅地址”或点击“一键导入 Clash”。
+          </p>
+        </div>
+        <div class="step-card grain">
+          <span class="mono-label step-index">STEP 02</span>
+          <h3 class="step-title">导入订阅配置并更新</h3>
+          <p class="prose">
+            打开 Clash Verge Rev，点击左侧「配置」➔ 粘贴订阅链接 ➔ 点击「导入」并设置为活跃配置。
+          </p>
+        </div>
+        <div class="step-card grain">
+          <span class="mono-label step-index">STEP 03</span>
+          <h3 class="step-title">选择节点并开启系统代理</h3>
+          <p class="prose">
+            进入「代理」选项卡，选择延迟最低的专线节点（如香港01），开启主界面「系统代理」开关，即可实现全网无感智能分流。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 常见问题 (FAQ) -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Troubleshooting</span>
+          <h2 class="t-h2">💡 Clash 常见配置与排错问答 (FAQ)</h2>
+        </div>
+      </div>
+
+      <div class="faq-list">
+        {
+          faqList.map((item, idx) => (
+            <details class="faq-item grain" open={idx === 0}>
+              <summary class="faq-summary">
+                <span class="faq-q-text">
+                  <span class="faq-q-badge mono-label">Q{idx + 1}</span> {item.q}
+                </span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p class="prose">{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .clients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .client-box {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+  }
+  .client-box__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
+  .client-name {
+    margin: 0;
+    font-size: 16px;
+    color: var(--fg-1);
+  }
+  .client-platform {
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: var(--space-3);
+  }
+  .client-desc {
+    font-size: 13px;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin-bottom: var(--space-4);
+    flex-grow: 1;
+  }
+
+  .steps-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .step-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .step-index {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .step-title {
+    font-size: 16px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    color: var(--fg-1);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .faq-item {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q-badge {
+    color: var(--accent);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .faq-answer {
+    padding: 12px 16px 16px 16px;
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.7;
+    border-top: 1px dashed var(--line-1);
+  }
+</style>

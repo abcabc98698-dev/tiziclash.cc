@@ -38,6 +38,12 @@ export const site: SiteConfig = {
     contact: 'mailto:security@tiziclash.cc',
     preferredLanguages: 'zh-CN, en',
   },
+  verification: {
+    google: '',
+    bing: '',
+    baidu: '',
+    shenma: '',
+  },
 }
 
 /**

@@ -16,6 +16,13 @@ export const GET: APIRoute = ({ site }) => {
     { path: '/free/', priority: '0.9', changefreq: 'weekly' },
     { path: '/clients/', priority: '0.9', changefreq: 'weekly' },
     { path: '/guide/', priority: '0.9', changefreq: 'weekly' },
+    // 核心战略语义支柱大类页 (Pillar Pages)
+    { path: '/vpn/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/jichang/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/clash/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/nodes/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/tizi/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/tutorial/', priority: '0.9', changefreq: 'weekly' },
     // 独立品牌详情页
     ...brands
       .filter((b) => b.hasDetailPage)

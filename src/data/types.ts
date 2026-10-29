@@ -74,6 +74,12 @@ export type SiteConfig = {
     preferredLanguages?: string
     expiresInDays?: number
   }
+  verification?: {
+    google?: string
+    bing?: string
+    baidu?: string
+    shenma?: string
+  }
 }
 
 /** 机场套餐价格条目 */

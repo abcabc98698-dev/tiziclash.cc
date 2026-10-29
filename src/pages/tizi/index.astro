@@ -1,0 +1,300 @@
+---
+import { getTopBrands } from '../../data/brands'
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const topBrands = getTopBrands(3)
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '2026 科学上网梯子推荐与避坑全景指南 · 稳定专线选型与安全常识 - 梯子Clash'
+const pageDesc =
+  '什么是真正靠谱的科学上网梯子？从IEPL内网专线与公网中转的物理本质出发，详细拆解梯子选型防跑路法则、合规免责声明与多端稳定加速方案。'
+
+const criteriaList = [
+  {
+    title: '1. 链路底层必须是真实专线 (IEPL/IPLC)',
+    desc: '普通公网中转在晚高峰受到运营商严重 QoS 限制，疯狂丢包；只有物理内网光纤专线才能保证晚高峰 4K 拖拽不卡顿。',
+    icon: '⚡',
+  },
+  {
+    title: '2. 拒绝无脑超长周期，优先选择成熟老牌',
+    desc: '尽量选择运营 2 年以上、具备良好技术口碑的老牌梯子（如 2020 年运营的光速云），切忌购买新上线半年的超大额 5 年付。',
+    icon: '🛡️',
+  },
+  {
+    title: '3. 支持双模生态：专属客户端与主流订阅并存',
+    desc: '既为小白提供一键安装即用的官方客户端，又全面开放 Clash、Shadowrocket、v2rayN 等通用配置，满足多设备生态。',
+    icon: '📱',
+  },
+  {
+    title: '4. AI 与流媒体住宅原生 IP 落地',
+    desc: '节点必须具备干净的海外原生住宅 IP，彻底规避 ChatGPT、Claude 访问时的 Access Denied 报错与连坐封号风险。',
+    icon: '🤖',
+  },
+]
+
+const faqList = [
+  {
+    q: '所谓的“永久免费翻墙梯子”到底能不能用？',
+    a: '绝对不可作为日常主力。野外免费梯子往往充斥着黑客的中间人攻击（嗅探未加密明文数据）、DNS 劫持、设备资源被劫持挖矿或作为僵尸网络肉鸡的巨大风险；且在晚高峰丢包率超过 50%，基本无法正常使用。如有预算考虑，建议选用光速云等正规服务商低至 8 元/月的平价方案。',
+  },
+  {
+    q: '使用梯子科学上网会泄露我的真实国内 IP 吗？',
+    a: '如果客户端未配置好 WebRTC 防泄露或发生 DNS 泄露，目标网站确实有可能检测到您的真实来源。建议在连接后通过权威的检测工具（如 browserleaks.com/webrtc 与 dnsleaktest.com）自检，确保无真实 IP 泄露。',
+  },
+]
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '梯子推荐与避坑指南', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      headline: pageTitle,
+      description: pageDesc,
+      url: currentUrl,
+      inLanguage: 'zh-CN',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqList.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a,
+        },
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>梯子选型与避坑全景</span>
+    </nav>
+
+    <header class="page-head">
+      <div class="page-head__title-group">
+        <span class="mono-label is-accent">Ladder Buying Guide & Anti-Scam</span>
+        <h1 class="t-h1">2026 科学上网梯子推荐与安全选型全景指南</h1>
+      </div>
+      <p class="t-lead">
+        拒绝虚假营销与跑路盘诱导。实验室从网络工程底层与经济成本模型出发，为您梳理靠谱梯子的核心特征与高性价比推荐。
+      </p>
+    </header>
+
+    <!-- 顶部导读卡片 -->
+    <aside class="tldr-box grain">
+      <div class="tldr-badge mono-label">Rule of Thumb · 选型避坑铁律</div>
+      <div class="tldr-grid">
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">梯子第一安全准则</span>
+          <strong class="tldr-v">远离未知“免费加速器”与破解客户端</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">防跑路核心策略</span>
+          <strong class="tldr-v">首选月付或买断制 (如光速云 147永久套餐)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">带宽实测门槛</span>
+          <strong class="tldr-v">晚高峰 300Mbps+ · 丢包率 0%</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">综合推荐首选</span>
+          <strong class="tldr-v">光速云 (2020老牌 · IEPL双专线)</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 4大选型准则 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Evaluation Pillars</span>
+          <h2 class="t-h2">🛡️ 评测实验室严选梯子的 4 大黄金标准</h2>
+        </div>
+      </div>
+
+      <div class="criteria-grid">
+        {
+          criteriaList.map((c) => (
+            <div class="criteria-card grain">
+              <span class="criteria-icon">{c.icon}</span>
+              <h3 class="criteria-title">{c.title}</h3>
+              <p class="prose">{c.desc}</p>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 精选梯子推荐 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Featured Ladder Providers</span>
+          <h2 class="t-h2">🏆 2026 稳定靠谱的专线梯子精选梯队</h2>
+        </div>
+        <a href="/rankings/" class="btn btn--subtle">查看完整榜单 →</a>
+      </div>
+
+      <div class="brand-recom-grid">
+        {
+          topBrands.map((b) => (
+            <article class="brand-card grain">
+              <div class="brand-card__header">
+                <div class="brand-card__title-row">
+                  <h3 class="brand-card__name">
+                    <a href={`/brands/${b.slug}/`}>{b.name}</a>
+                  </h3>
+                  {b.isFeatured && <span class="badge badge--amber">首推标杆</span>}
+                  {b.rank && <span class="rank-badge">#{b.rank}</span>}
+                </div>
+                <span class="mono-label brand-card__meta">{b.foundedYear}年运营 · {b.lineType}</span>
+              </div>
+              <p class="brand-card__intro clamp-2">{b.intro}</p>
+              <div class="brand-card__pricing">
+                <div class="price-block">
+                  <span class="mono-label">入门方案</span>
+                  <div class="price-num">
+                    <span class="currency">¥</span>
+                    <strong class="val">{b.entryPriceMonth}</strong>
+                    <span class="period">/月起</span>
+                  </div>
+                </div>
+                {b.promoCode && (
+                  <div class="code-block">
+                    <span class="mono-label">优惠码</span>
+                    <code class="promo-pill">{b.promoCode}</code>
+                  </div>
+                )}
+              </div>
+              <div class="brand-card__actions">
+                <a href={b.affiliateUrl} target="_blank" rel="nofollow sponsored noopener" class="btn btn--primary">
+                  直达官网 ↗
+                </a>
+                <a href={`/brands/${b.slug}/`} class="btn btn--subtle">
+                  详情评测
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 常见问题 (FAQ) -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Anti-Scam FAQ</span>
+          <h2 class="t-h2">💡 梯子选型与安全常识问答 (FAQ)</h2>
+        </div>
+      </div>
+
+      <div class="faq-list">
+        {
+          faqList.map((item, idx) => (
+            <details class="faq-item grain" open={idx === 0}>
+              <summary class="faq-summary">
+                <span class="faq-q-text">
+                  <span class="faq-q-badge mono-label">Q{idx + 1}</span> {item.q}
+                </span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p class="prose">{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .criteria-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .criteria-icon {
+    font-size: 24px;
+    margin-bottom: var(--space-2);
+    display: inline-block;
+  }
+  .criteria-title {
+    font-size: 16px;
+    color: var(--fg-1);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .brand-recom-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .faq-item {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q-badge {
+    color: var(--accent);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .faq-answer {
+    padding: 12px 16px 16px 16px;
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.7;
+    border-top: 1px dashed var(--line-1);
+  }
+</style>

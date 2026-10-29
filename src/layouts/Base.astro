@@ -12,6 +12,8 @@ interface Props {
   ogImage?: string
   keywords?: string
   noindex?: boolean
+  publishedTime?: string
+  modifiedTime?: string
 }
 
 const {
@@ -20,11 +22,18 @@ const {
   ogImage = '/og-image.png',
   keywords,
   noindex = false,
+  publishedTime,
+  modifiedTime,
 } = Astro.props
 
 const siteOrigin = Astro.site ?? new URL(site.url)
-const pageTitle = title ? `${title} · ${site.name}` : site.title
-const canonical = new URL(Astro.url.pathname, siteOrigin)
+const pageTitle = title
+  ? (title.includes(site.name) ? title : `${title} · ${site.name}`)
+  : site.title
+
+// Always ensure trailing slash on canonical paths for consistent normalization
+const cleanPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`
+const canonical = new URL(cleanPath, siteOrigin)
 const ogImageUrl = new URL(ogImage, siteOrigin)
 ---
 
@@ -41,6 +50,13 @@ const ogImageUrl = new URL(ogImage, siteOrigin)
     <meta name="description" content={description} />
     {keywords && <meta name="keywords" content={keywords} />}
     <meta name="author" content={site.author} />
+
+    <!-- Search Engine Webmaster Verification Meta Tags -->
+    {site.verification?.google && <meta name="google-site-verification" content={site.verification.google} />}
+    {site.verification?.bing && <meta name="msvalidate.01" content={site.verification.bing} />}
+    {site.verification?.baidu && <meta name="baidu-site-verification" content={site.verification.baidu} />}
+    {site.verification?.shenma && <meta name="shenma-site-verification" content={site.verification.shenma} />}
+
     {
       noindex ? (
         <meta name="robots" content="noindex, nofollow" />

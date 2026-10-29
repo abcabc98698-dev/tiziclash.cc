@@ -1,0 +1,260 @@
+---
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '科学上网零基础入门教程 · 客户端配置、订阅导入与网络排错手册 - 梯子Clash'
+const pageDesc =
+  '面向小白用户的科学上网入门教程：详解机场订阅链接导入、小火箭Shadowrocket使用、Clash分流模式设置、TUN虚拟网卡开启与节点超时排错全流程。'
+
+const tutorialSteps = [
+  {
+    step: 'STEP 01',
+    title: '选择一家支持多协议的高品质专线服务商',
+    desc: '推荐选择运营 2 年以上、具备 IEPL 内网专线与多协议支持的品牌（如光速云或微风网络）。在用户后台注册并选购适合自己的套餐（如 8元/月轻量版或 147 永久买断版）。',
+    tip: '避坑提示：切忌购买野外未知免费节点作为日常办公主力。',
+  },
+  {
+    step: 'STEP 02',
+    title: '按系统平台下载对应的开源代理客户端',
+    desc: 'Windows/macOS 首选 Clash Verge Rev；Android 首选 FlClash 或 v2rayNG；iOS 建议在美区 App Store 下载 Shadowrocket（小火箭）或 Quantumult X。',
+    tip: '避坑提示：严禁在百度搜索来源不明的“破解版”或“定制客户端”。',
+  },
+  {
+    step: 'STEP 03',
+    title: '一键导入订阅链接并更新节点列表',
+    desc: '在机场控制台点击「一键导入 Clash/小火箭」或「复制订阅链接」，粘贴到客户端配置栏目中，点击下载刷新，即可获取包含全球数十个专线节点的列表。',
+    tip: '避坑提示：务必开启自动定时更新，保证节点 IP 轮换自愈。',
+  },
+  {
+    step: 'STEP 04',
+    title: '选择节点并开启规则分流代理 (Rule)',
+    desc: '在客户端中将分流模式设置为「规则模式（Rule）」，优先选择香港或日本的低延迟节点，开启「系统代理」开关，即可实现国内网站直连、海外网站自动翻墙。',
+    tip: '避坑提示：若命令行或游戏未走代理，开启客户端内的「TUN 虚拟网卡」。',
+  },
+]
+
+const faqList = [
+  {
+    q: '为什么导入订阅后，点击测速全部显示红叉或超时（Timeout）？',
+    a: '请排查三个常见原因：第一，本地电脑时间与标准北京时间存在偏差（超过 60 秒会导致 TLS 握手鉴权失败），请在系统设置中点击“立即同步时间”；第二，本地安全软件（如 360 或杀毒软件）拦截了代理内核，请将其添加到白名单；第三，机场提供的订阅域名在本地被运营商污染，可尝试切换本地 DNS 为 223.5.5.5 或 119.29.29.29。',
+  },
+  {
+    q: '代理软件开启后，微信能发消息，但浏览器就是打不开 Google 怎么办？',
+    a: '通常是浏览器代理插件（如 SwitchyOmega）冲突，或者系统代理设置被其他软件抢占。建议关闭浏览器中安装的所有第三方代理插件，或者直接在 Clash 中开启「TUN 模式」，绕过浏览器系统代理层接管全局流量。',
+  },
+]
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '零基础使用教程', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'HowTo',
+      name: '科学上网与翻墙软件从 0 到 1 极简上手指南',
+      description: pageDesc,
+      step: tutorialSteps.map((s, idx) => ({
+        '@type': 'HowToStep',
+        position: idx + 1,
+        name: s.title,
+        text: s.desc,
+      })),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqList.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a,
+        },
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>零基础使用教程</span>
+    </nav>
+
+    <header class="page-head">
+      <div class="page-head__title-group">
+        <span class="mono-label is-accent">Complete Beginner-Friendly Handbook</span>
+        <h1 class="t-h1">科学上网与翻墙软件零基础使用教程与排错手册</h1>
+      </div>
+      <p class="t-lead">
+        手把手保姆级图文引导：从专线选型、客户端下载、订阅链接一键导入到 TUN 模式开启与常见故障自愈。
+      </p>
+    </header>
+
+    <!-- 顶部核心要点 -->
+    <aside class="tldr-box grain">
+      <div class="tldr-badge mono-label">Quick Checklist · 极简步骤速览</div>
+      <div class="tldr-grid">
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">推荐专线品牌</span>
+          <strong class="tldr-v">光速云 (8元/月起 / 147买断)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">电脑推荐软件</span>
+          <strong class="tldr-v">Clash Verge Rev (Windows/Mac)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">手机推荐软件</span>
+          <strong class="tldr-v">FlClash (安卓) / 小火箭 (iOS)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">第一排错法则</span>
+          <strong class="tldr-v">校准系统时间 · 确保误差 &lt; 30秒</strong>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 教程步骤卡片流 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Tutorial Walkthrough</span>
+          <h2 class="t-h2">📖 科学上网新手上手 4 大核心步骤</h2>
+        </div>
+      </div>
+
+      <div class="tutorial-steps">
+        {
+          tutorialSteps.map((s) => (
+            <div class="tutorial-step-card grain">
+              <div class="step-badge mono-label">{s.step}</div>
+              <h3 class="step-title">{s.title}</h3>
+              <p class="prose step-desc">{s.desc}</p>
+              <div class="step-tip mono-label">{s.tip}</div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- 常见问题与排错手册 (FAQ) -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Troubleshooting Guide</span>
+          <h2 class="t-h2">💡 高频连接故障自检排错手册 (FAQ)</h2>
+        </div>
+      </div>
+
+      <div class="faq-list">
+        {
+          faqList.map((item, idx) => (
+            <details class="faq-item grain" open={idx === 0}>
+              <summary class="faq-summary">
+                <span class="faq-q-text">
+                  <span class="faq-q-badge mono-label">Q{idx + 1}</span> {item.q}
+                </span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p class="prose">{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .tutorial-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+  }
+  .tutorial-step-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+  .step-badge {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: var(--space-2);
+  }
+  .step-title {
+    font-size: 17px;
+    color: var(--fg-1);
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+  .step-desc {
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.7;
+    margin-bottom: var(--space-3);
+  }
+  .step-tip {
+    font-size: 12px;
+    color: var(--accent);
+    background: rgba(232, 180, 88, 0.08);
+    border-left: 3px solid var(--accent);
+    padding: 6px 12px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .faq-item {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q-badge {
+    color: var(--accent);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .faq-answer {
+    padding: 12px 16px 16px 16px;
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.7;
+    border-top: 1px dashed var(--line-1);
+  }
+</style>

@@ -1,0 +1,216 @@
+---
+import TopRanking from '../../components/TopRanking.astro'
+import { getFeaturedBrand } from '../../data/brands'
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const featured = getFeaturedBrand()
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '2026 优质专线机场推荐梯队榜 · 晚高峰实测与高性价比选型 - 梯子Clash'
+const pageDesc =
+  '2026最新专线机场梯队排行榜：深度横评光速云、微风网络、飞猫云等42家主流品牌。涵盖IEPL/IPLC专线、8元月付平价方案及ChatGPT/流媒体解锁实测。'
+
+const faqList = [
+  {
+    q: '为什么一定要选择 IEPL 或 IPLC 物理专线机场？',
+    a: '因为普通公网中转线路在非高峰期测速尚可，但在晚上 20:30-23:00 国际出口拥塞时，电信和联通运营商会对普通公网执行严格的 QoS 限速和丢包（丢包率达 30% 以上）；而真正的 IEPL/IPLC 走的是企业级内网物理光缆直连，跨越国境不经过公网防火墙，实现全天候 0 丢包与满速体验。',
+  },
+  {
+    q: '如何防范机场跑路风险？',
+    a: '坚持两大原则：第一，尽量选择运营时间超过 2 年以上且具有技术底蕴的老牌服务商（如 2020 年运营至今的光速云）；第二，对于初次接触的新品牌，切忌一上来就购买 3 年甚至 5 年超大额长期套餐，优先通过月付或买断制不限时流量包（如光速云 147 永久套餐）实测稳定度。',
+  },
+  {
+    q: '机场的优惠码怎么使用？',
+    a: '在选定机场官网注册账号后，在套餐购买页面的结算环节，找到“优惠码 / 折扣券”输入框，输入本实验室核实的专属折扣码（如光速云优惠码 AMM），点击校验即可立享对应折扣。',
+  },
+]
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '机场推荐精选梯队', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'CollectionPage',
+      headline: pageTitle,
+      description: pageDesc,
+      url: currentUrl,
+      inLanguage: 'zh-CN',
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: faqList.map((f) => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: f.a,
+        },
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>优质专线机场推荐梯队</span>
+    </nav>
+
+    <header class="page-head">
+      <div class="page-head__title-group">
+        <span class="mono-label is-accent">Verified Performance Tier List</span>
+        <h1 class="t-h1">2026 优质专线机场推荐与横向横评榜单</h1>
+      </div>
+      <p class="t-lead">
+        严格基于 2026 年晚高峰分布式探针实测数据，为您横评全网 42 家主流机场品牌。重点拆解物理专线、起步月费、解锁纯净度与真实避坑准则。
+      </p>
+    </header>
+
+    <!-- 顶部核心导读卡片 -->
+    <aside class="tldr-box grain">
+      <div class="tldr-badge mono-label">Executive Summary · 选型建议</div>
+      <div class="tldr-grid">
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">首推旗舰品牌</span>
+          <strong class="tldr-v">光速云 (IEPL双专线 · 529Mbps)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">极致性价比代表</span>
+          <strong class="tldr-v">光速云 147永久套餐 / 8元月付</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">新手小白首选</span>
+          <strong class="tldr-v">飞猫云 (专属免配置客户端)</strong>
+        </div>
+        <div class="tldr-metric">
+          <span class="tldr-k mono-label">AI 深度工作者</span>
+          <strong class="tldr-v">星岛梦 (双 ISP 原生住宅 IP)</strong>
+        </div>
+      </div>
+      <div class="tldr-callout">
+        <span class="tldr-lead">评测准则承诺：</span>
+        本实验室绝不收录无公网出口保障的“超售低质公网盘”。所有推荐品牌均通过晚高峰 20:00-23:00 丢包率与流媒体解锁持续性监控。
+      </div>
+    </aside>
+
+    <!-- 精选排行榜组件 -->
+    <TopRanking />
+
+    <!-- 品牌库大盘跳转入口 -->
+    <section class="section">
+      <div class="all-brands-banner grain">
+        <div class="banner-text">
+          <h3 class="t-h2">📚 检索 42 家机场品牌全景数据库</h3>
+          <p class="prose">
+            除上述 TOP 10 精选梯队外，实验室还收录了包含 WgetCloud、白月光、CyberGuard、萤火虫在内的全部 42 家服务商，全透明展示套餐、协议与真实约束。
+          </p>
+        </div>
+        <a href="/brands/" class="btn btn--primary btn--lg">
+          进入 42 品牌全景数据库 →
+        </a>
+      </div>
+    </section>
+
+    <!-- 常见问题 (FAQ) -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Frequently Asked Questions</span>
+          <h2 class="t-h2">💡 专线机场选型与使用常见问答 (FAQ)</h2>
+        </div>
+      </div>
+
+      <div class="faq-list">
+        {
+          faqList.map((item, idx) => (
+            <details class="faq-item grain" open={idx === 0}>
+              <summary class="faq-summary">
+                <span class="faq-q-text">
+                  <span class="faq-q-badge mono-label">Q{idx + 1}</span> {item.q}
+                </span>
+                <span class="faq-icon" aria-hidden="true">+</span>
+              </summary>
+              <div class="faq-answer">
+                <p class="prose">{item.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .all-brands-banner {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+    flex-wrap: wrap;
+    margin-top: var(--space-6);
+  }
+  .banner-text {
+    max-width: 650px;
+  }
+  .banner-text h3 {
+    margin-top: 0;
+    margin-bottom: var(--space-2);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+  .faq-item {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .faq-summary {
+    padding: 14px 16px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+  }
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-q-badge {
+    color: var(--accent);
+    font-size: 12px;
+    margin-right: 6px;
+  }
+  .faq-answer {
+    padding: 12px 16px 16px 16px;
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.7;
+    border-top: 1px dashed var(--line-1);
+  }
+</style>
