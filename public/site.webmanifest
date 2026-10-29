@@ -1,0 +1,22 @@
+{
+  "name": "TiziClash - 现代网络工具与极简技术实验室",
+  "short_name": "TiziClash",
+  "description": "TiziClash 致力于构建纯净、独立、高性能的跨平台网络工具集与规则生态",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0c",
+  "theme_color": "#0b0b0c",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}

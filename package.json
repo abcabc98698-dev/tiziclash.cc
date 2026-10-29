@@ -1,0 +1,32 @@
+{
+  "name": "tiziclash",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TiziClash - 现代网络工具与高性能独立技术实验室",
+  "homepage": "https://tiziclash.cc",
+  "author": "TiziClash",
+  "license": "MIT",
+  "packageManager": "pnpm@10.33.0",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "node scripts/build-fonts.mjs && astro dev",
+    "build": "node scripts/build-fonts.mjs && astro build",
+    "build:fonts": "node scripts/build-fonts.mjs",
+    "preview": "astro preview",
+    "typecheck": "astro check",
+    "check": "biome check .",
+    "fix": "biome check --write ."
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.6",
+    "@biomejs/biome": "^2.5.11",
+    "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@fontsource/shippori-mincho-b1": "^5.3.0",
+    "@fontsource/zen-kaku-gothic-new": "^5.3.0",
+    "astro": "^7.2.9",
+    "typescript": "^6.0.3"
+  }
+}
