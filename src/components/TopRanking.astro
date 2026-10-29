@@ -236,6 +236,14 @@ function getBadgeClass(rank: number = 0, isFirst: boolean): string {
       </div>
     </div>
 
+    <!-- 跳转至全部 42 家品牌全库入口 -->
+    <div class="ranking-cta-wrap">
+      <a href="/brands/" class="btn btn--secondary btn-all-brands">
+        <span>🔍 检索全部 42 家机场品牌全景数据库与筛选中心</span>
+        <span class="arrow" aria-hidden="true">→</span>
+      </a>
+    </div>
+
     <!-- 底部合规与审核声明 -->
     <div class="ranking-notice mono-label">
       <span>* 声明：所有外部链接均为合规推广链接，通过链接注册可能为本实验室带来服务器维护佣金，绝不影响用户实际支付价格。</span>
@@ -718,6 +726,31 @@ function getBadgeClass(rank: number = 0, isFirst: boolean): string {
   }
   .btn-text:hover {
     color: var(--fg-1);
+  }
+
+  .ranking-cta-wrap {
+    margin-top: var(--space-5);
+    display: flex;
+    justify-content: center;
+  }
+
+  .btn-all-brands {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 600;
+    background: var(--bg-1);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    border-radius: var(--radius-md);
+    transition: all 0.2s ease;
+  }
+
+  .btn-all-brands:hover {
+    background: var(--accent);
+    color: var(--bg-0);
   }
 
   .ranking-notice {
