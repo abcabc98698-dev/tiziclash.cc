@@ -19,7 +19,7 @@ const links = (Object.keys(site.links) as (keyof typeof site.links)[])
     <div class="site-footer__row">
       <div class="site-footer__brand">
         <a class="wordmark" href="/">
-          <span class="wordmark__dot" aria-hidden="true"></span>
+          <img class="wordmark__avatar" src="/avatar.webp" alt={site.name} width="22" height="22" />
           {site.name}
         </a>
         <span>{footer.tagline}</span>

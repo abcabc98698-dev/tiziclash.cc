@@ -4,10 +4,26 @@ import { hero } from '../data/site'
 
 <section class="hero" aria-labelledby="hero-title">
   <div class="hero__lead">
-    <span class="mono-label is-accent">{hero.eyebrow}</span>
+    <div class="hero__profile">
+      <div class="hero__avatar-box">
+        <img
+          src="/avatar.webp"
+          alt="梯子Clash 实验室"
+          class="hero__avatar"
+          width="76"
+          height="76"
+          loading="eager"
+        />
+        <div class="hero__avatar-status" title="网络探针持续在线"></div>
+      </div>
+      <div class="hero__profile-text">
+        <span class="mono-label is-accent">{hero.eyebrow}</span>
+        {hero.handle && <span class="mono hero__handle">{hero.handle}</span>}
+      </div>
+    </div>
+
     <div class="hero__title">
       <h1 class="t-display" id="hero-title">{hero.name}</h1>
-      {hero.handle && <span class="mono hero__handle">{hero.handle}</span>}
     </div>
     <div class="hero__text stack">
       {hero.lead.map((paragraph) => <p class="t-lead">{paragraph}</p>)}
