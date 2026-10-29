@@ -52,20 +52,32 @@ const { brand } = Astro.props
   </div>
 
   <div class="brand-card__actions">
-    <a
-      href={brand.affiliateUrl}
-      target="_blank"
-      rel="nofollow sponsored noopener"
-      class={`btn ${brand.isFeatured ? 'btn--primary' : ''}`}
-    >
-      官网注册直达
-      <span class="arrow" aria-hidden="true">↗</span>
-    </a>
-    {brand.hasDetailPage && (
-      <a href={`/brands/${brand.slug}/`} class="btn btn--subtle">
-        深度评测
-      </a>
-    )}
+    {
+      brand.affiliateUrl ? (
+        <a
+          href={brand.affiliateUrl}
+          target="_blank"
+          rel="nofollow sponsored noopener"
+          class={`btn ${brand.isFeatured ? 'btn--primary' : ''}`}
+        >
+          官网注册直达
+          <span class="arrow" aria-hidden="true">
+            ↗
+          </span>
+        </a>
+      ) : (
+        <span class="btn btn--disabled" title="历史品牌，未公开独立注册入口，仅供参数横向比对">
+          未公开独立入口
+        </span>
+      )
+    }
+    {
+      brand.hasDetailPage && (
+        <a href={`/brands/${brand.slug}/`} class="btn btn--subtle">
+          深度评测
+        </a>
+      )
+    }
   </div>
 </article>
 
@@ -206,5 +218,18 @@ const { brand } = Astro.props
   .btn--subtle:hover {
     color: var(--fg-1);
     border-color: var(--fg-1);
+  }
+
+  .btn--disabled {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-2);
+    border: 1px dashed var(--line-1);
+    color: var(--fg-4);
+    cursor: not-allowed;
+    font-size: 13px;
+    padding: 8px 14px;
+    border-radius: var(--radius-sm);
   }
 </style>

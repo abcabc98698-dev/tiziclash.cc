@@ -107,7 +107,7 @@ const jsonLd = JSON.stringify({
                     <a
                       href={client.url}
                       target="_blank"
-                      rel="noopener noreferrer"
+                      rel={client.isFree ? 'noopener noreferrer' : 'nofollow noopener noreferrer'}
                       class="btn btn--sm"
                     >
                       官方项目 / 下载

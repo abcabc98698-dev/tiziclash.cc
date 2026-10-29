@@ -13,6 +13,7 @@ export const GET: APIRoute = ({ site }) => {
     { path: '/', priority: '1.0', changefreq: 'daily' },
     { path: '/rankings/', priority: '0.9', changefreq: 'daily' },
     { path: '/brands/', priority: '0.9', changefreq: 'daily' },
+    { path: '/free/', priority: '0.9', changefreq: 'weekly' },
     { path: '/clients/', priority: '0.9', changefreq: 'weekly' },
     { path: '/guide/', priority: '0.9', changefreq: 'weekly' },
     // 独立品牌详情页
