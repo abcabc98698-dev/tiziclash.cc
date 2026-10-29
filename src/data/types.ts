@@ -13,7 +13,7 @@ export type Link = {
   external?: boolean
 }
 
-export type NavIcon = 'posts' | 'code' | 'link' | 'dashboard' | 'apps' | 'book' | 'shield'
+export type NavIcon = 'posts' | 'code' | 'link' | 'dashboard' | 'apps' | 'book' | 'shield' | 'gift'
 
 export type NavItem = Link & {
   external: boolean

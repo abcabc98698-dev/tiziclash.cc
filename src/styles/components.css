@@ -74,6 +74,18 @@
   background: var(--bg-2);
 }
 
+.site-nav a[href="/free/"] {
+  color: var(--accent);
+  background: rgba(232, 180, 88, 0.08);
+  border: 1px solid rgba(232, 180, 88, 0.28);
+  font-weight: 600;
+}
+
+.site-nav a[href="/free/"]:hover {
+  background: rgba(232, 180, 88, 0.18);
+  border-color: var(--accent);
+}
+
 .arrow {
   font-family: var(--font-mono);
   font-size: 0.85em;
@@ -118,12 +130,38 @@ a:hover .arrow {
 }
 
 @media (max-width: 639px) {
+  .site-header {
+    height: auto;
+    padding-block: 8px;
+  }
+
+  .site-header__inner {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
   .site-nav {
+    display: flex;
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 2px;
+    gap: 4px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .site-nav::-webkit-scrollbar {
     display: none;
   }
 
+  .site-nav a {
+    white-space: nowrap;
+    padding: 4px 10px;
+    font-size: 13px;
+  }
+
   .site-nav__icons {
-    display: flex;
+    display: none;
   }
 }
 

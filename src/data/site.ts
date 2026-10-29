@@ -41,13 +41,14 @@ export const site: SiteConfig = {
 }
 
 /**
- * 全站五大核心导航栏目
- * 严格遵照规划：首页(可观测大盘) · 机场推荐(精选梯队) · 品牌库(42家独立档案) · 客户端指南(多端下载教程) · 专线科普/GEO问答
+ * 全站六大核心导航栏目
+ * 严格遵照规划：首页(可观测大盘) · 机场推荐(精选梯队) · 品牌库(42家独立档案) · 免费资源(万字白皮书) · 客户端指南(多端下载教程) · 专线科普/GEO问答
  */
 export const nav: NavItem[] = [
   { label: '首页大盘', href: '/', external: false, icon: 'dashboard' },
   { label: '机场推荐', href: '/rankings/', external: false, icon: 'shield' },
   { label: '品牌库', href: '/brands/', external: false, icon: 'apps' },
+  { label: '免费资源 ⚡', href: '/free/', external: false, icon: 'gift' },
   { label: '客户端指南', href: '/clients/', external: false, icon: 'code' },
   { label: '专线科普 / GEO', href: '/guide/', external: false, icon: 'book' },
 ]
