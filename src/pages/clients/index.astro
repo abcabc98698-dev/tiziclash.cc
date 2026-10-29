@@ -1,0 +1,239 @@
+---
+import { clients } from '../../data/clients'
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '2026 全平台科学上网代理客户端大全 · Clash/小火箭/v2rayN 下载与配置教程'
+const pageDesc =
+  '全网最全 2026 机场代理客户端指南：覆盖 Windows、macOS (Intel/Apple Silicon)、iOS (Shadowrocket/Stash)、Android (v2rayNG/FlClash) 及 OpenWrt 软路由。提供官方开源项目地址与避坑教程。'
+
+const PLATFORMS = ['Windows', 'macOS', 'iOS', 'Android', 'Linux', 'OpenWrt'] as const
+
+// Schema.org
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '客户端指南', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'ItemList',
+      name: '2026 全平台代理客户端推荐清单',
+      description: pageDesc,
+      numberOfItems: clients.length,
+      itemListElement: clients.map((c, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        name: `${c.name} (${c.platform})`,
+        url: c.url,
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>全平台代理客户端指南</span>
+    </nav>
+
+    <header class="page-head">
+      <span class="mono-label is-accent">Cross-Platform Client Directory</span>
+      <h1 class="t-h1">2026 机场代理客户端大全与配置指南</h1>
+      <p class="t-lead">
+        机场代理客户端主要分为<strong>通用第三方客户端</strong>（支持导入 Clash / VLESS / Shadowsocks 订阅）与<strong>服务商专属客户端</strong>（一键登录即用免配置）。本专栏按操作系统整理，提供可信赖的官方与开源项目直达。
+      </p>
+
+      <div class="platform-nav pills">
+        {PLATFORMS.map((p) => (
+          <a href={`#${p.toLowerCase()}`} class="pill">
+            {p} 客户端
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <!-- 各平台客户端区块 -->
+    {
+      PLATFORMS.map((platform) => {
+        const platformClients = clients.filter((c) => c.platform === platform)
+        return (
+          <section class="section client-section" id={platform.toLowerCase()}>
+            <div class="section-head">
+              <div class="section-head__title">
+                <span class="mono-label is-accent">{platform} Ecosystem</span>
+                <h2 class="t-h2">{platform} 平台精选客户端</h2>
+              </div>
+            </div>
+
+            <div class="client-grid">
+              {platformClients.map((client) => (
+                <div class={`client-card grain ${client.isOfficialOrRecommended ? 'is-recommended' : ''}`}>
+                  <div class="client-card__top">
+                    <div>
+                      <h3 class="client-name">{client.name}</h3>
+                      <span class="mono-label client-core">{client.core}</span>
+                    </div>
+                    {client.isOfficialOrRecommended && (
+                      <span class="badge badge--amber">首选推荐</span>
+                    )}
+                  </div>
+
+                  <ul class="client-features">
+                    {client.features.map((f) => <li>{f}</li>)}
+                  </ul>
+
+                  {client.tip && (
+                    <div class="client-tip">
+                      <span class="mono-label">配置贴士:</span>
+                      <p>{client.tip}</p>
+                    </div>
+                  )}
+
+                  <div class="client-card__foot">
+                    <span class="mono-label">{client.isFree ? '完全免费开源' : '付费应用 / 商业许可'}</span>
+                    <a
+                      href={client.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="btn btn--sm"
+                    >
+                      官方项目 / 下载
+                      <span class="arrow" aria-hidden="true">↗</span>
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )
+      })
+    }
+
+    <!-- 客户端安全避坑提示 -->
+    <div class="security-warning-box grain">
+      <h3 class="t-title-card">⚠️ 客户端安全与防钓鱼警告</h3>
+      <p class="prose">
+        1. <strong>认准官方 Release</strong>：Clash、v2rayN、sing-box 等开源客户端绝无所谓“收费专业版”。网络上存在大量被植入后门或弹窗广告的二次打包镜像，务必通过 GitHub 官方仓库 Releases 页面下载安装。<br />
+        2. <strong>苹果 iOS 官方认证</strong>：iOS 端请使用外区 Apple ID 从 App Store 下载正版应用（如 Shadowrocket、Stash），切勿随意安装来路不明的企业证书签发包（.ipa），谨防系统级流量劫持。<br />
+        3. <strong>软路由兼容性</strong>：OpenWrt 安装 OpenClash 或 Nikki 时，务必核实自己的内核架构（x86_64、aarch64_cortex-a53等），避免刷入不兼容核心导致路由器死机断网。
+      </p>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .platform-nav {
+    margin-top: var(--space-4);
+  }
+
+  .client-section {
+    margin-top: var(--space-7);
+  }
+
+  .client-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-5);
+  }
+
+  .client-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .client-card.is-recommended {
+    border-color: rgba(232, 180, 88, 0.4);
+    box-shadow: 0 0 15px rgba(232, 180, 88, 0.05);
+  }
+
+  .client-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+
+  .client-name {
+    margin: 0;
+    font-size: 18px;
+    color: var(--fg-1);
+  }
+
+  .client-core {
+    color: var(--accent);
+    font-size: 12px;
+    display: block;
+    margin-top: 2px;
+  }
+
+  .client-features {
+    margin: var(--space-2) 0;
+    padding-left: 18px;
+    font-size: 13px;
+    color: var(--fg-2);
+    line-height: 1.7;
+  }
+
+  .client-tip {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    margin: var(--space-3) 0;
+  }
+
+  .client-tip .mono-label {
+    font-size: 10px;
+    color: var(--accent);
+    display: block;
+  }
+
+  .client-tip p {
+    margin: 2px 0 0 0;
+    font-size: 12px;
+    color: var(--fg-2);
+    line-height: 1.5;
+  }
+
+  .client-card__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line-1);
+    margin-top: var(--space-3);
+  }
+
+  .security-warning-box {
+    background: var(--bg-1);
+    border: 1px solid #f59e0b;
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-top: var(--space-8);
+  }
+
+  .security-warning-box h3 {
+    margin-top: 0;
+    color: #f59e0b;
+  }
+</style>

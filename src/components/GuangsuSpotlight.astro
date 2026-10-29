@@ -1,0 +1,245 @@
+---
+import { getFeaturedBrand } from '../data/brands'
+
+const brand = getFeaturedBrand()
+---
+
+<section class="spotlight-card grain">
+  <div class="spotlight-header">
+    <div class="spotlight-badge-group">
+      <span class="badge badge--amber">👑 实验室 2026 年度首推旗舰</span>
+      <span class="mono-label">2020年稳定运营至今 · IEPL+企业内网双专线</span>
+    </div>
+    <span class="mono-label promo-callout">专属优惠码: <strong class="code-highlight">{brand.promoCode}</strong></span>
+  </div>
+
+  <div class="spotlight-body">
+    <div class="spotlight-main">
+      <div class="spotlight-brand-title">
+        <h2 class="t-display">{brand.name} · 极速专线</h2>
+        <span class="mono brand-handle">Sahude GSY VIP</span>
+      </div>
+      <p class="t-lead">
+        兼具顶尖晚高峰专线抗压能力与超高性价比的老牌旗舰。独家推出「致敬斯诺克 147 永久套餐」（147元买断 247GB 永久不过期），年付折合约 8 元/月起。全节点×1倍率，单节点最高 2.5Gbps，支持 Clash/Shadowrocket 与官方自研客户端。
+      </p>
+
+      <div class="spotlight-plans">
+        <div class="plan-chip is-featured-plan">
+          <span class="plan-chip__tag">🎱 独家买断</span>
+          <strong class="plan-chip__name">致敬斯诺克147</strong>
+          <span class="plan-chip__price">¥147 (247GB 永久不过期)</span>
+        </div>
+        <div class="plan-chip">
+          <span class="plan-chip__tag">年付超值</span>
+          <strong class="plan-chip__name">轻量版</strong>
+          <span class="plan-chip__price">¥99/年 (约8元/月 · 69GB)</span>
+        </div>
+        <div class="plan-chip">
+          <span class="plan-chip__tag">全 IPLC 专线</span>
+          <strong class="plan-chip__name">极速版</strong>
+          <span class="plan-chip__price">¥25/月 (168GB · 最高2.5Gbps)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="spotlight-aside">
+      <div class="telemetry-box">
+        <span class="mono-label">实测晚高峰表现</span>
+        <div class="telemetry-metric">
+          <span class="metric-val">22<small>ms</small></span>
+          <span class="metric-lbl">香港平均延时</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="metric-val">529<small>Mbps</small></span>
+          <span class="metric-lbl">单线峰值吞吐</span>
+        </div>
+        <div class="telemetry-metric">
+          <span class="metric-val">0.0<small>%</small></span>
+          <span class="metric-lbl">晚高峰丢包率</span>
+        </div>
+      </div>
+
+      <div class="spotlight-cta">
+        <a
+          href={brand.affiliateUrl}
+          target="_blank"
+          rel="nofollow sponsored noopener"
+          class="btn btn--primary btn--lg"
+        >
+          直达光速云官网抢购
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a>
+        <a href="/brands/guangsu/" class="btn btn--subtle">
+          查看完整深度评测
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .spotlight-card {
+    background: linear-gradient(135deg, rgba(232, 180, 88, 0.08) 0%, var(--bg-1) 100%);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-6);
+    box-shadow: 0 0 30px rgba(232, 180, 88, 0.08);
+  }
+
+  .spotlight-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid var(--line-1);
+    margin-bottom: var(--space-5);
+  }
+
+  .spotlight-badge-group {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .code-highlight {
+    background: var(--bg-0);
+    border: 1px dashed var(--accent);
+    padding: 2px 8px;
+    border-radius: 4px;
+    color: var(--accent);
+    font-size: 14px;
+  }
+
+  .spotlight-body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: var(--space-7);
+    align-items: center;
+  }
+
+  .spotlight-brand-title {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .spotlight-brand-title h2 {
+    margin: 0;
+    font-size: 32px;
+  }
+
+  .brand-handle {
+    color: var(--fg-3);
+    font-size: 14px;
+  }
+
+  .spotlight-plans {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .plan-chip {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .plan-chip.is-featured-plan {
+    border-color: rgba(232, 180, 88, 0.5);
+    background: rgba(232, 180, 88, 0.05);
+  }
+
+  .plan-chip__tag {
+    font-size: 11px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .plan-chip__name {
+    font-size: 15px;
+    color: var(--fg-1);
+  }
+
+  .plan-chip__price {
+    font-size: 12px;
+    color: var(--fg-2);
+  }
+
+  .spotlight-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .telemetry-box {
+    background: var(--bg-0);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: var(--space-2);
+    text-align: center;
+  }
+
+  .telemetry-box .mono-label {
+    grid-column: span 3;
+    text-align: left;
+    margin-bottom: 4px;
+    color: var(--fg-3);
+  }
+
+  .telemetry-metric {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .metric-val {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .metric-val small {
+    font-size: 12px;
+    font-weight: 400;
+    color: var(--fg-3);
+  }
+
+  .metric-lbl {
+    font-size: 11px;
+    color: var(--fg-3);
+  }
+
+  .spotlight-cta {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .btn--lg {
+    padding: 12px 20px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 900px) {
+    .spotlight-body {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

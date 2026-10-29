@@ -1,0 +1,171 @@
+---
+/**
+ * 流媒体 & AI 解锁实测报告组件
+ * 严格按照《机场品牌图表样式.txt》规范实现
+ */
+import type { UnlockStatus } from '../data/types'
+
+interface Props {
+  brandName?: string
+  unlocks?: UnlockStatus[]
+  testNode?: string
+}
+
+const {
+  brandName = '光速云',
+  testNode = '香港 IEPL 01 / 日本 东京 专线',
+  unlocks = [
+    { service: 'ChatGPT', status: 'supported', note: '原生IP解锁 · 免手机验证' },
+    { service: 'Claude', status: 'supported', note: '直连无阻断 · 稳定抗封控' },
+    { service: 'Gemini', status: 'partial', note: '视节点而定 · 美区专线可用' },
+    { service: 'Netflix', status: 'supported', note: '非自制剧全解锁 · 4K原画' },
+    { service: 'Disney+', status: 'supported', note: '全区解锁 · 声画无损' },
+    { service: 'YouTube', status: 'supported', note: 'Premium免广告 · 8K流畅' },
+    { service: 'HBO Max', status: 'supported', note: '美区原创内容解锁' },
+    { service: 'TikTok', status: 'supported', note: '跨区直播 · 电商运营' },
+    { service: 'Spotify', status: 'supported', note: '全区免换区使用' },
+  ],
+} = Astro.props
+
+const STATUS_ICONS: Record<string, { icon: string; text: string; class: string }> = {
+  supported: { icon: '🟢', text: '支持 / 解锁', class: 'is-supported' },
+  partial: { icon: '🟡', text: '部分节点', class: 'is-partial' },
+  unsupported: { icon: '🔴', text: '受限 / 需切线', class: 'is-unsupported' },
+  untested: { icon: '⚪', text: '待核实', class: 'is-untested' },
+}
+---
+
+<div class="unlock-panel grain">
+  <div class="unlock-panel__head">
+    <div class="unlock-panel__title">
+      <span class="mono-label is-accent">Service Availability Matrix</span>
+      <h3 class="t-title-card">🎬 {brandName} · 流媒体与生成式 AI 解锁实测</h3>
+    </div>
+    <span class="mono-label">测试源: RegionRestrictionCheck</span>
+  </div>
+
+  <div class="unlock-grid">
+    {
+      unlocks.map((item) => {
+        const conf = STATUS_ICONS[item.status] || STATUS_ICONS.untested
+        return (
+          <div class={`unlock-card ${conf.class}`}>
+            <div class="unlock-card__top">
+              <span class="unlock-service">{item.service}</span>
+              <span class="unlock-badge mono-label">
+                <span class="indicator-dot"></span>
+                {conf.text}
+              </span>
+            </div>
+            <p class="unlock-note">{item.note || '实测可用性以实时环境为准'}</p>
+          </div>
+        )
+      })
+    }
+  </div>
+
+  <div class="unlock-footer mono-label">
+    <span>测试锚点: {testNode}</span>
+    <span class="watermark">[tiziclash.cc 实验室]</span>
+  </div>
+</div>
+
+<style>
+  .unlock-panel {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-top: var(--space-4);
+  }
+
+  .unlock-panel__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--space-2);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--line-1);
+    margin-bottom: var(--space-4);
+  }
+
+  .unlock-panel__title h3 {
+    margin: 4px 0 0 0;
+    color: var(--fg-1);
+  }
+
+  .unlock-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: var(--space-3);
+  }
+
+  .unlock-card {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: var(--space-3) var(--space-4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .unlock-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .unlock-service {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--fg-1);
+  }
+
+  .unlock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: var(--radius-pill);
+    background: var(--bg-3);
+  }
+
+  .indicator-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .unlock-card.is-supported .indicator-dot { background: #10b981; }
+  .unlock-card.is-supported .unlock-badge { color: #10b981; }
+
+  .unlock-card.is-partial .indicator-dot { background: #f59e0b; }
+  .unlock-card.is-partial .unlock-badge { color: #f59e0b; }
+
+  .unlock-card.is-unsupported .indicator-dot { background: #ef4444; }
+  .unlock-card.is-unsupported .unlock-badge { color: #ef4444; }
+
+  .unlock-note {
+    font-size: 12px;
+    color: var(--fg-3);
+    margin: var(--space-2) 0 0 0;
+  }
+
+  .unlock-footer {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line-1);
+    display: flex;
+    justify-content: space-between;
+    color: var(--fg-3);
+    font-size: 12px;
+  }
+
+  .watermark {
+    opacity: 0.4;
+  }
+</style>

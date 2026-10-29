@@ -1,0 +1,277 @@
+---
+/**
+ * 专线网络拓扑示意组件 (Network Path Observatory)
+ * 严格按照《机场品牌图表样式.txt》规范实现
+ */
+interface Props {
+  brandName?: string
+  ingressCities?: string
+  lineSpecs?: string
+  egressCities?: string
+}
+
+const {
+  brandName = '光速云',
+  ingressCities = '上海 / 广州 / 深圳 BGP 多线接入',
+  lineSpecs = 'IEPL 双专线物理链路 · 跨域不经公网 GFW · 独立带宽保障',
+  egressCities = '香港 (20节点) / 日本 (10节点) / 新加坡 (10节点) / 美国 (10节点)',
+} = Astro.props
+---
+
+<div class="topology-panel grain">
+  <div class="topology-header">
+    <div class="topology-title">
+      <span class="mono-label is-accent">Network Path Observatory</span>
+      <h3 class="t-title-card">🗺️ {brandName} · 跨境专线传输架构链路图</h3>
+    </div>
+    <span class="badge badge--dark">端到端二层链路</span>
+  </div>
+
+  <div class="topo-diagram">
+    <!-- Step 1: User Client -->
+    <div class="topo-node">
+      <div class="topo-node__box">
+        <span class="topo-icon">💻</span>
+        <div class="topo-node__info">
+          <strong>用户终端</strong>
+          <span class="mono-label">PC / 手机 / 软路由</span>
+        </div>
+      </div>
+      <span class="topo-tag mono-label">VLESS / Trojan 加密流</span>
+    </div>
+
+    <!-- Arrow 1 -->
+    <div class="topo-connector">
+      <span class="topo-line"></span>
+      <span class="topo-arrow">▼</span>
+    </div>
+
+    <!-- Step 2: Ingress -->
+    <div class="topo-node">
+      <div class="topo-node__box is-border-amber">
+        <span class="topo-icon">🏢</span>
+        <div class="topo-node__info">
+          <strong>国内中转入口 (BGP 优化)</strong>
+          <span class="mono-label">{ingressCities}</span>
+        </div>
+      </div>
+      <span class="topo-tag mono-label is-accent">屏蔽真实IP · 智能最优入网</span>
+    </div>
+
+    <!-- Arrow 2: Core Dedicated Tunnel -->
+    <div class="topo-connector is-dedicated">
+      <div class="dedicated-badge">
+        <span class="mono-label">⚡ {lineSpecs}</span>
+      </div>
+      <span class="topo-line is-thick"></span>
+      <span class="topo-arrow">▼</span>
+    </div>
+
+    <!-- Step 3: Egress -->
+    <div class="topo-node">
+      <div class="topo-node__box is-border-amber">
+        <span class="topo-icon">🌏</span>
+        <div class="topo-node__info">
+          <strong>海外落地网关 (原生住宅 IP 节点池)</strong>
+          <span class="mono-label">{egressCities}</span>
+        </div>
+      </div>
+      <span class="topo-tag mono-label is-accent">单节点最高 2.5Gbps · 防 QoS 丢包</span>
+    </div>
+
+    <!-- Arrow 3: Fork Out -->
+    <div class="topo-fork">
+      <div class="topo-fork__branch">
+        <span class="topo-branch-arrow">↳</span>
+        <div class="branch-card">
+          <strong>🎬 流媒体 / AI 生产力专线</strong>
+          <span class="mono-label">Netflix 4K · ChatGPT · Claude 纯净直连</span>
+        </div>
+      </div>
+      <div class="topo-fork__branch">
+        <span class="topo-branch-arrow">↳</span>
+        <div class="branch-card">
+          <strong>🌐 全球常规互联网资源</strong>
+          <span class="mono-label">YouTube 8K · GitHub · 跨境电商投放</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topology-footer mono-label">
+    <span>架构优势: 避免公网国际出口晚高峰丢包与特征审查 · 0-RTT 极速握手</span>
+    <span class="watermark">[tiziclash.cc 拓扑引擎]</span>
+  </div>
+</div>
+
+<style>
+  .topology-panel {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-top: var(--space-4);
+  }
+
+  .topology-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--line-1);
+    margin-bottom: var(--space-5);
+  }
+
+  .topology-title h3 {
+    margin: 4px 0 0 0;
+    color: var(--fg-1);
+  }
+
+  .topo-diagram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: var(--space-3) 0;
+  }
+
+  .topo-node {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .topo-node__box {
+    width: 100%;
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .topo-node__box.is-border-amber {
+    border-color: rgba(232, 180, 88, 0.4);
+    box-shadow: 0 0 15px rgba(232, 180, 88, 0.05);
+  }
+
+  .topo-icon {
+    font-size: 22px;
+  }
+
+  .topo-node__info strong {
+    display: block;
+    font-size: 14px;
+    color: var(--fg-1);
+  }
+
+  .topo-tag {
+    font-size: 11px;
+    color: var(--fg-3);
+  }
+
+  .topo-connector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0;
+    color: var(--accent);
+  }
+
+  .topo-line {
+    width: 2px;
+    height: 18px;
+    background: var(--line-2);
+  }
+
+  .topo-line.is-thick {
+    width: 3px;
+    height: 24px;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .topo-connector.is-dedicated {
+    width: 100%;
+    position: relative;
+    padding: 10px 0;
+  }
+
+  .dedicated-badge {
+    background: var(--bg-0);
+    border: 1px solid var(--accent);
+    padding: 4px 12px;
+    border-radius: var(--radius-pill);
+    margin-bottom: 6px;
+    color: var(--accent);
+    box-shadow: 0 0 10px rgba(232, 180, 88, 0.15);
+  }
+
+  .topo-arrow {
+    font-size: 10px;
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  .topo-fork {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-3);
+    margin-top: var(--space-4);
+  }
+
+  .topo-fork__branch {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .topo-branch-arrow {
+    color: var(--accent);
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .branch-card {
+    background: var(--bg-2);
+    border: 1px dashed var(--line-2);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    flex: 1;
+  }
+
+  .branch-card strong {
+    display: block;
+    font-size: 13px;
+    color: var(--fg-1);
+  }
+
+  .topology-footer {
+    margin-top: var(--space-5);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line-1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    color: var(--fg-3);
+    font-size: 12px;
+  }
+
+  .watermark {
+    opacity: 0.4;
+  }
+
+  @media (max-width: 639px) {
+    .topo-fork {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

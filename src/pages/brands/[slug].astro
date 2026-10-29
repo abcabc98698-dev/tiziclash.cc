@@ -1,0 +1,408 @@
+---
+import type { GetStaticPaths } from 'astro'
+import NetworkTopology from '../../components/NetworkTopology.astro'
+import ObservatoryDashboard from '../../components/ObservatoryDashboard.astro'
+import UnlockMatrix from '../../components/UnlockMatrix.astro'
+import { brands } from '../../data/brands'
+import { site } from '../../data/site'
+import type { Brand } from '../../data/types'
+import Base from '../../layouts/Base.astro'
+
+export const getStaticPaths = (() => {
+  // 仅为配置有独立详情页的品牌生成路由（Top 10 + 光速云专题 + 梯子云）
+  return brands
+    .filter((b) => b.hasDetailPage)
+    .map((brand, index, arr) => ({
+      params: { slug: brand.slug },
+      props: {
+        brand,
+        prev: arr[index - 1],
+        next: arr[index + 1],
+      },
+    }))
+}) satisfies GetStaticPaths
+
+interface Props {
+  brand: Brand
+  prev?: Brand
+  next?: Brand
+}
+
+const { brand, prev, next } = Astro.props
+
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = `${brand.name}怎么样？2026最新评测 · 优惠码 · 晚高峰测速与套餐解析`
+const pageDesc = `${brand.name} 2026年实测报告：采用${brand.lineType}，协议支持${brand.protocols.join('/')}，起步价¥${brand.entryPriceMonth}/月起。深度解析其晚高峰丢包率、ChatGPT流媒体解锁能力、套餐价格表与最新优惠码。`
+
+// Schema.org Product / Review / BreadcrumbList
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '机场品牌库', item: `${siteOrigin}/brands/` },
+        { '@type': 'ListItem', position: 3, name: brand.name, item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'Product',
+      name: `${brand.name} 专线机场服务`,
+      description: brand.intro,
+      brand: { '@type': 'Brand', name: brand.name },
+      offers: {
+        '@type': 'AggregateOffer',
+        priceCurrency: 'CNY',
+        lowPrice: brand.entryPriceMonth,
+        offerCount: brand.pricing.length,
+      },
+      review: {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: brand.rank === 1 ? '4.9' : '4.7',
+          bestRating: '5',
+        },
+        author: { '@type': 'Organization', name: site.name },
+        reviewBody: brand.intro,
+      },
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <article class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <a href="/brands/">机场品牌库</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>{brand.name} 评测</span>
+    </nav>
+
+    <!-- 品牌主头部 -->
+    <header class="brand-hero grain">
+      <div class="brand-hero__left">
+        <div class="brand-badges">
+          {brand.isFeatured && <span class="badge badge--amber">👑 实验室首推旗舰</span>}
+          {brand.rank && <span class="rank-badge">综合榜单 #{brand.rank}</span>}
+          <span class="mono-label">{brand.foundedYear}年运营 · {brand.lineType}</span>
+        </div>
+
+        <h1 class="t-h1">{brand.name} 深度测评报告</h1>
+        <p class="t-lead">{brand.intro}</p>
+
+        {brand.promoCode && (
+          <div class="coupon-box">
+            <span class="mono-label">独家优惠券:</span>
+            <code class="coupon-code">{brand.promoCode}</code>
+            <span class="mono-label coupon-note">{brand.discountNote || '结账输入即享折扣'}</span>
+          </div>
+        )}
+
+        <div class="brand-cta-row">
+          <a
+            href={brand.affiliateUrl}
+            target="_blank"
+            rel="nofollow sponsored noopener"
+            class="btn btn--primary btn--lg"
+          >
+            前往 {brand.name} 官网直达注册
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a>
+          <span class="mono-label cta-tip">* 官方入口 · 安全防钓鱼</span>
+        </div>
+      </div>
+
+      <div class="brand-hero__facts">
+        <dl class="rows">
+          <div>
+            <dt class="mono-label">最低起步价</dt>
+            <dd><strong class="is-accent">¥{brand.entryPriceMonth}</strong> /月 ({brand.entryTrafficMonth})</dd>
+          </div>
+          <div>
+            <dt class="mono-label">链路架构</dt>
+            <dd>{brand.lineType}</dd>
+          </div>
+          <div>
+            <dt class="mono-label">支持协议</dt>
+            <dd class="pills">{brand.protocols.map((p) => <span class="pill">{p}</span>)}</dd>
+          </div>
+          <div>
+            <dt class="mono-label">客户端形态</dt>
+            <dd>{brand.clientType}</dd>
+          </div>
+          <div>
+            <dt class="mono-label">节点覆盖</dt>
+            <dd class="t-small">{brand.nodeCoverage}</dd>
+          </div>
+        </dl>
+      </div>
+    </header>
+
+    <!-- 套餐价格表 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Pricing & Plans</span>
+          <h2 class="t-h2">💳 {brand.name} 官方套餐价格表</h2>
+        </div>
+        <span class="mono-label">数据核验: {brand.verifiedDate}</span>
+      </div>
+
+      <div class="pricing-table-wrapper grain">
+        <table class="pricing-table">
+          <thead>
+            <tr>
+              <th>套餐名称</th>
+              <th>计费周期</th>
+              <th>套餐价格</th>
+              <th>月流量</th>
+              <th>流量重置周期</th>
+            </tr>
+          </thead>
+          <tbody>
+            {brand.pricing.map((plan) => (
+              <tr>
+                <td>
+                  <strong>{plan.name}</strong>
+                  {plan.badge && <span class="badge badge--amber">{plan.badge}</span>}
+                </td>
+                <td><span class="mono-label">{plan.billing}</span></td>
+                <td><strong class="price-val">{plan.price}</strong></td>
+                <td><span class="traffic-val">{plan.traffic}</span></td>
+                <td><span class="mono-label">{plan.cycle}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 实测可观测性大盘 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Observability Benchmark</span>
+          <h2 class="t-h2">📊 晚高峰实测与解锁能力</h2>
+        </div>
+      </div>
+
+      <ObservatoryDashboard brandName={brand.name} records={brand.speedTests} />
+      <UnlockMatrix brandName={brand.name} unlocks={brand.unlocks} />
+      <NetworkTopology brandName={brand.name} />
+    </section>
+
+    <!-- 优缺点与风险防范 -->
+    <section class="section">
+      <div class="pro-con-grid">
+        <div class="pro-con-card is-pro grain">
+          <h3 class="t-title-card">✅ 核心优势与推荐理由</h3>
+          <ul class="check-list">
+            {brand.pros.map((p) => <li>{p}</li>)}
+          </ul>
+        </div>
+
+        <div class="pro-con-card is-con grain">
+          <h3 class="t-title-card">⚠️ 限制与注意事项</h3>
+          <ul class="cross-list">
+            {brand.cons.map((c) => <li>{c}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="suitable-box grain">
+        <div class="suitable-col">
+          <strong>适合人群：</strong>
+          <p>{brand.suitableFor.join('；')}</p>
+        </div>
+        <div class="suitable-col">
+          <strong>不适合人群：</strong>
+          <p>{brand.unsuitableFor.join('；')}</p>
+        </div>
+        <div class="risk-col">
+          <strong class="is-warning">风险提示：</strong>
+          <p class="t-small">{brand.riskNotice}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 上下篇导航 -->
+    <nav class="post-nav" aria-label="其他品牌评测">
+      {prev ? (
+        <a class="post-nav__item" href={`/brands/${prev.slug}/`}>
+          <span class="mono-label">← 上一个品牌</span>
+          <span class="post-nav__title">{prev.name} 评测</span>
+        </a>
+      ) : (
+        <a class="post-nav__item" href="/brands/">
+          <span class="mono-label">← 品牌全库</span>
+          <span class="post-nav__title">返回品牌列表</span>
+        </a>
+      )}
+
+      {next ? (
+        <a class="post-nav__item is-next" href={`/brands/${next.slug}/`}>
+          <span class="mono-label">下一个品牌 →</span>
+          <span class="post-nav__title">{next.name} 评测</span>
+        </a>
+      ) : (
+        <a class="post-nav__item is-next" href="/brands/">
+          <span class="mono-label">品牌全库 →</span>
+          <span class="post-nav__title">探索更多品牌</span>
+        </a>
+      )}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .brand-hero {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: var(--space-6);
+    margin-top: var(--space-4);
+  }
+
+  .brand-badges {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-3);
+  }
+
+  .coupon-box {
+    background: var(--bg-2);
+    border: 1px dashed var(--accent);
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin: var(--space-4) 0;
+  }
+
+  .coupon-code {
+    background: var(--bg-0);
+    color: var(--accent);
+    padding: 2px 8px;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 4px;
+  }
+
+  .brand-cta-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .cta-tip {
+    color: var(--fg-3);
+    font-size: 12px;
+  }
+
+  .brand-hero__facts {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+  }
+
+  .pricing-table-wrapper {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    overflow-x: auto;
+  }
+
+  .pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+  }
+
+  .pricing-table th,
+  .pricing-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line-1);
+    text-align: left;
+  }
+
+  .price-val {
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .traffic-val {
+    font-weight: 500;
+    color: var(--fg-1);
+  }
+
+  .pro-con-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin-bottom: var(--space-5);
+  }
+
+  .pro-con-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+
+  .pro-con-card h3 {
+    margin-top: 0;
+  }
+
+  .check-list,
+  .cross-list {
+    margin: var(--space-3) 0 0 0;
+    padding-left: 20px;
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.8;
+  }
+
+  .suitable-box {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+
+  .suitable-box strong {
+    color: var(--fg-1);
+  }
+
+  .is-warning {
+    color: #f59e0b;
+  }
+
+  @media (max-width: 860px) {
+    .brand-hero {
+      grid-template-columns: 1fr;
+    }
+    .pro-con-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,9 +1,13 @@
 ---
 import About from '../components/About.astro'
 import Contact from '../components/Contact.astro'
+import DecisionTree from '../components/DecisionTree.astro'
+import GuangsuSpotlight from '../components/GuangsuSpotlight.astro'
 import Hero from '../components/Hero.astro'
-import LatestPosts from '../components/LatestPosts.astro'
-import Projects from '../components/Projects.astro'
+import NetworkTopology from '../components/NetworkTopology.astro'
+import ObservatoryDashboard from '../components/ObservatoryDashboard.astro'
+import TopRanking from '../components/TopRanking.astro'
+import UnlockMatrix from '../components/UnlockMatrix.astro'
 import { site } from '../data/site'
 import Base from '../layouts/Base.astro'
 
@@ -48,9 +52,6 @@ const jsonLd = JSON.stringify({
       isPartOf: {
         '@id': `${siteOrigin}/#website`,
       },
-      about: {
-        '@id': `${siteOrigin}/#organization`,
-      },
     },
   ],
 })
@@ -60,8 +61,23 @@ const jsonLd = JSON.stringify({
   <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
   <div class="container">
     <Hero />
-    <Projects />
-    <LatestPosts />
+    <GuangsuSpotlight />
+    <DecisionTree />
+    <TopRanking />
+    
+    <section class="section" id="observatory">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Network Observatory</span>
+          <h2 class="t-h2">📊 晚高峰链路可观测性大盘</h2>
+        </div>
+        <span class="mono-label">拒绝口头承诺 · 呈现真实数据</span>
+      </div>
+      <ObservatoryDashboard />
+      <UnlockMatrix />
+      <NetworkTopology />
+    </section>
+
     <About />
     <Contact />
   </div>

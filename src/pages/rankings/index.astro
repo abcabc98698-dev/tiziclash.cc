@@ -1,0 +1,140 @@
+---
+import GuangsuSpotlight from '../../components/GuangsuSpotlight.astro'
+import TopRanking from '../../components/TopRanking.astro'
+import { getTopBrands } from '../../data/brands'
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const topBrands = getTopBrands(10)
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '2026 梯子机场推荐梯队榜单 · 晚高峰实测与高性价比精选'
+const pageDesc =
+  '2026年最新机场推荐榜单：重点横评光速云、飞猫云、微风网络、暮光加速等主流品牌。覆盖IEPL/IPLC专线、8元极限平价、永久不限时套餐及ChatGPT流媒体解锁能力。'
+
+// Schema.org ItemList + FAQPage
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '机场推荐榜单', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'ItemList',
+      name: '2026 梯子机场推荐 TOP 10 榜单',
+      description: pageDesc,
+      numberOfItems: topBrands.length,
+      itemListElement: topBrands.map((b, idx) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        name: b.name,
+        url: `${siteOrigin}/brands/${b.slug}/`,
+      })),
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: '2026 年选机场最核心看什么指标？',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: '首先看链路类型（优先选择真实的 IEPL 或 IPLC 物理专线，避免普通公网中转在晚高峰受到运营商 QoS 限速丢包）；其次看运营时间（尽量选择运营 2 年以上且有技术底蕴的老牌，如 2020 年运营的光速云）；最后按自身需求选择计费模式（如月付、年付或买断制不限时流量包）。',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: '为什么首推光速云？它有什么独特优势？',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: '光速云自 2020 年运营至今，采用 IEPL + 企业级内网双专线架构，单节点最高 2.5Gbps 带宽。独家推出 147 元买断 247GB 永久不过期的斯诺克纪念套餐，以及低至 8 元/月的轻量版年付。既提供小白专属客户端，又完美兼容 Clash/Shadowrocket，综合稳定度和性价比位居前列。',
+          },
+        },
+      ],
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>机场推荐梯队榜</span>
+    </nav>
+
+    <header class="page-head">
+      <span class="mono-label is-accent">Verified Performance Leaderboard</span>
+      <h1 class="t-h1">2026 梯子机场推荐与横向评测榜单</h1>
+      <p class="t-lead">{pageDesc}</p>
+    </header>
+
+    <GuangsuSpotlight />
+
+    <TopRanking />
+
+    <!-- 选型决策与深度科普 -->
+    <section class="section">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="mono-label is-accent">Buying Guide & Methodology</span>
+          <h2 class="t-h2">💡 2026 机场选型避坑与决策指南</h2>
+        </div>
+      </div>
+
+      <div class="guide-grid">
+        <article class="guide-box grain">
+          <h3 class="guide-box__title">1. 专线（IEPL/IPLC）与普通中转的本质区别</h3>
+          <p class="prose">
+            很多新手只看标称带宽，却忽视了链路底层架构。普通公网中转在非高峰期测速好看，但晚上 20:30-23:00 国际出口拥堵时，电信和联通会对公网流量实行无差别 QoS 丢包，导致 4K 视频疯狂转圈；而真正的 IEPL/IPLC 物理专线走的是内网隔离光纤，直接跨过公网审查与拥塞，能够做到全天候 0 丢包。
+          </p>
+        </article>
+
+        <article class="guide-box grain">
+          <h3 class="guide-box__title">2. 协议与客户端生态选择：专属 App vs 通用订阅</h3>
+          <p class="prose">
+            追求省事的小白用户，首选提供官方专属客户端的品牌（如飞猫云、Firefly、梯子云），下载登录即用；而如果是电脑、手机、软路由全套生态的多设备玩家，必须选用支持 Clash / Shadowrocket 通用订阅导入的品牌（如光速云、微风网络、星岛梦）。
+          </p>
+        </article>
+
+        <article class="guide-box grain">
+          <h3 class="guide-box__title">3. 避免大额年付陷阱与跑路防范</h3>
+          <p class="prose">
+            面对新上线半年以内的全新机场，切忌一上来就购买 3 年甚至 5 年超大额年付。建议优先通过月付或体验型套餐实测自己所在地区（电信/移动/联通）在晚高峰的真实表现，只有运营时间超过 2 年以上且口碑成熟的品牌，方可考虑长周期持有。
+          </p>
+        </article>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-4);
+  }
+
+  .guide-box {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+
+  .guide-box__title {
+    font-size: 16px;
+    color: var(--fg-1);
+    margin-top: 0;
+    margin-bottom: var(--space-3);
+  }
+</style>

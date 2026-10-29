@@ -1,5 +1,5 @@
 ---
-import { site, ui } from '../data/site'
+import { ui } from '../data/site'
 import Base from '../layouts/Base.astro'
 
 // Static hosts serve dist/404.html for any unmatched path.
@@ -12,16 +12,12 @@ import Base from '../layouts/Base.astro'
     <p class="prose">{ui.notFound.description}</p>
     <div class="hero__actions">
       <a class="btn btn--primary" href="/">{ui.notFound.home}</a>
-      {
-        site.links.blog && (
-          <a class="btn" href={site.links.blog}>
-            {ui.notFound.blog}
-            <span class="arrow" aria-hidden="true">
-              ↗
-            </span>
-          </a>
-        )
-      }
+      <a class="btn" href="/rankings/">
+        {ui.notFound.blog}
+        <span class="arrow" aria-hidden="true">
+          →
+        </span>
+      </a>
     </div>
   </div>
 </Base>

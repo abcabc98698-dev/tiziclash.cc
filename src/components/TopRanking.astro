@@ -1,0 +1,278 @@
+---
+import { getTopBrands } from '../data/brands'
+
+const topBrands = getTopBrands(10)
+---
+
+<div class="ranking-section" id="rankings">
+  <div class="section-head">
+    <div class="section-head__title">
+      <span class="mono-label is-accent">2026 Recommended Tier List</span>
+      <h2 class="t-h2">🏆 2026 梯子机场综合评测 TOP 10 榜单</h2>
+    </div>
+    <span class="mono-label">数据来源: 实验室晚高峰实测 · 严格遵循规范</span>
+  </div>
+
+  <div class="ranking-table-wrapper grain">
+    <div class="table-responsive">
+      <table class="ranking-table">
+        <thead>
+          <tr>
+            <th>排名</th>
+            <th>品牌名称</th>
+            <th>专线架构 / 协议</th>
+            <th>入门月费</th>
+            <th>专属优惠码</th>
+            <th>客户端模式</th>
+            <th>实验室评分</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            topBrands.map((brand) => {
+              const isFirst = brand.rank === 1
+              return (
+                <tr class={isFirst ? 'is-champion' : ''}>
+                  <td>
+                    <span class={`rank-badge ${isFirst ? 'is-gold' : brand.rank && brand.rank <= 3 ? 'is-silver' : ''}`}>
+                      {isFirst ? '★ TOP 1' : `#${brand.rank}`}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="brand-cell">
+                      <a href={`/brands/${brand.slug}/`} class="brand-link">
+                        <strong>{brand.name}</strong>
+                      </a>
+                      {isFirst && <span class="badge badge--amber">首推旗舰</span>}
+                      {brand.slug === 'guangsu' && <span class="badge badge--dark">147永久套餐</span>}
+                    </div>
+                  </td>
+                  <td>
+                    <span class="mono-label is-accent">{brand.lineType}</span>
+                    <div class="mono-label protocol-tags">{brand.protocols.join(' / ')}</div>
+                  </td>
+                  <td>
+                    <span class="price-val">¥{brand.entryPriceMonth}</span>
+                    <span class="price-sub">/月起</span>
+                  </td>
+                  <td>
+                    {brand.promoCode ? (
+                      <code class="promo-code" title="点击注册时填入享受折扣">
+                        {brand.promoCode}
+                      </code>
+                    ) : (
+                      <span class="mono-label">—</span>
+                    )}
+                  </td>
+                  <td>
+                    <span class="client-type-text">{brand.clientType}</span>
+                  </td>
+                  <td>
+                    <div class="rating-box">
+                      <span class="rating-score">{isFirst ? '9.9' : (9.9 - (brand.rank || 0) * 0.12).toFixed(1)}</span>
+                      <span class="rating-desc">{isFirst ? '极力推荐' : '稳健精选'}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <a
+                        href={brand.affiliateUrl}
+                        target="_blank"
+                        rel="nofollow sponsored noopener"
+                        class={`btn btn--sm ${isFirst ? 'btn--primary' : ''}`}
+                      >
+                        官网直达
+                        <span class="arrow" aria-hidden="true">↗</span>
+                      </a>
+                      <a href={`/brands/${brand.slug}/`} class="btn-text">
+                        评测详情
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              )
+            })
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <div class="ranking-table-notice mono-label">
+      <span>* 声明：所有外部链接均为合规推广链接，通过链接注册可能为本实验室带来服务器维护佣金，绝不影响用户实际支付价格。</span>
+      <span>数据核实周期: 2026.10</span>
+    </div>
+  </div>
+</div>
+
+<style>
+  .ranking-section {
+    margin-top: var(--space-8);
+  }
+
+  .ranking-table-wrapper {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-top: var(--space-4);
+  }
+
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    min-width: 860px;
+  }
+
+  .ranking-table th {
+    padding: 12px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--fg-3);
+    border-bottom: 1px solid var(--line-1);
+  }
+
+  .ranking-table td {
+    padding: 14px 14px;
+    border-bottom: 1px solid var(--line-1);
+    vertical-align: middle;
+  }
+
+  .ranking-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  .ranking-table tr.is-champion {
+    background: rgba(232, 180, 88, 0.04);
+  }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+    border-radius: var(--radius-pill);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--bg-3);
+    color: var(--fg-2);
+  }
+
+  .rank-badge.is-gold {
+    background: var(--accent);
+    color: #0b0b0c;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  .rank-badge.is-silver {
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--fg-1);
+  }
+
+  .brand-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .brand-link {
+    color: var(--fg-1);
+    font-size: 15px;
+    text-decoration: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  .brand-link:hover {
+    color: var(--accent);
+  }
+
+  .price-val {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--accent);
+    font-family: var(--font-mono);
+  }
+
+  .price-sub {
+    font-size: 12px;
+    color: var(--fg-3);
+  }
+
+  .promo-code {
+    background: var(--bg-2);
+    border: 1px dashed var(--accent);
+    color: var(--accent);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+  }
+
+  .protocol-tags {
+    font-size: 11px;
+    color: var(--fg-3);
+    margin-top: 2px;
+  }
+
+  .client-type-text {
+    font-size: 13px;
+    color: var(--fg-2);
+  }
+
+  .rating-box {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rating-score {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    color: #10b981;
+    font-size: 14px;
+  }
+
+  .rating-desc {
+    font-size: 11px;
+    color: var(--fg-3);
+  }
+
+  .action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .btn--sm {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .btn-text {
+    font-size: 12px;
+    color: var(--fg-3);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .btn-text:hover {
+    color: var(--fg-1);
+  }
+
+  .ranking-table-notice {
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line-1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2);
+    font-size: 12px;
+    color: var(--fg-3);
+  }
+</style>

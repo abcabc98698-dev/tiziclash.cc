@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { projects } from '../data/projects'
+import { brands } from '../data/brands'
 import { site as siteConfig } from '../data/site'
 
 /**
@@ -11,11 +11,18 @@ export const GET: APIRoute = ({ site }) => {
 
   const pages = [
     { path: '/', priority: '1.0', changefreq: 'daily' },
-    ...projects.map((p) => ({
-      path: `/projects/${p.slug}/`,
-      priority: '0.8',
-      changefreq: 'weekly',
-    })),
+    { path: '/rankings/', priority: '0.9', changefreq: 'daily' },
+    { path: '/brands/', priority: '0.9', changefreq: 'daily' },
+    { path: '/clients/', priority: '0.9', changefreq: 'weekly' },
+    { path: '/guide/', priority: '0.9', changefreq: 'weekly' },
+    // 独立品牌详情页
+    ...brands
+      .filter((b) => b.hasDetailPage)
+      .map((b) => ({
+        path: `/brands/${b.slug}/`,
+        priority: b.isFeatured ? '0.9' : '0.8',
+        changefreq: 'weekly',
+      })),
   ]
 
   const urls = pages

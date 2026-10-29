@@ -1,0 +1,266 @@
+---
+/**
+ * 机场选型场景决策树 (Decision Tree Component)
+ * 帮助用户在 30 秒内锁定最适合自己的机场方案，利于 GEO 搜索引擎精准语义提取
+ */
+const SCENARIOS = [
+  {
+    title: '👑 晚高峰极致稳定 · 办公核心主力',
+    tag: 'IEPL / IPLC 专线',
+    desc: '对时延抖动零容忍、拒绝卡顿。要求 20:00-23:00 晚高峰 0 丢包，支持 4K/8K 满速播放与团队长时稳定在线。',
+    recommends: [
+      {
+        name: '光速云',
+        badge: '首推主力',
+        reason: 'IEPL+内网双专线 / 单节点最高2.5Gbps / 运营5年+',
+        link: '/brands/guangsu/',
+      },
+      {
+        name: '一翻云',
+        badge: '物理专线',
+        reason: '原生住宅 IP / Hysteria 2 / 晚高峰0丢包',
+        link: '/brands/guangsu/',
+      },
+      {
+        name: '二猫云',
+        badge: '品质专线',
+        reason: '不限设备连接数 / 拒绝跑路盘 / 全IEPL',
+        link: '/brands/ermao/',
+      },
+    ],
+  },
+  {
+    title: '🤖 生成式 AI 生产力 · ChatGPT / Claude',
+    tag: '原生 IP 解锁',
+    desc: '深度依赖 ChatGPT 4o、Claude 3.5 Sonnet、Midjourney 等 AI 工具，严禁频繁触发 Access Denied 报错阻断。',
+    recommends: [
+      {
+        name: '光速云',
+        badge: '高连通率',
+        reason: '全线覆盖 AI 场景，香港及美区节点稳定可用',
+        link: '/brands/guangsu/',
+      },
+      {
+        name: '唯兔云',
+        badge: 'IPLC专线',
+        reason: '全解锁 ChatGPT/Claude/Gemini',
+        link: '/brands/weitu/',
+      },
+      {
+        name: '速界',
+        badge: 'AI定制',
+        reason: '25元档唯一明确针对 AI 工具深耕优化的品牌',
+        link: '/brands/guangsu/',
+      },
+    ],
+  },
+  {
+    title: '⚡ 新手小白 · 下载登录即用',
+    tag: '免配置专属客户端',
+    desc: '不熟悉 Clash 订阅转换、不想研究复杂的节点规则。需要下载官方 App，输入账号密码一键开启连接。',
+    recommends: [
+      {
+        name: '飞猫云',
+        badge: '7元起步',
+        reason: '全平台专属 App / 免导入订阅 / 上手零门槛',
+        link: '/brands/feimao/',
+      },
+      {
+        name: 'Firefly',
+        badge: 'IPLC专线',
+        reason: '专属软件直连 / 8元起步 / 晚高峰稳定',
+        link: '/brands/firefly/',
+      },
+      {
+        name: '无忧链接',
+        badge: '6.5元极低',
+        reason: '电商与新手向 / 官方专属客户端',
+        link: '/brands/wuyou/',
+      },
+    ],
+  },
+  {
+    title: '💰 极限平价 · 5.6 元 ~ 8 元档',
+    tag: '超低预算首选',
+    desc: '预算极度敏感的学生党或轻度备用者。虽然预算有限，但拒绝直连卡顿，依然要求必须走真正的专线网络。',
+    recommends: [
+      {
+        name: '光速云',
+        badge: '年付约8元/月',
+        reason: '99元/年 69GB/月，专线品质超越同价位',
+        link: '/brands/guangsu/',
+      },
+      {
+        name: '大佬云',
+        badge: '5.6元/月',
+        reason: 'IEPL + VLESS + 季付7折，极低持有成本',
+        link: '/brands/dalaoyun/',
+      },
+      {
+        name: '微风网络',
+        badge: '7元档IEPL',
+        reason: 'IEPL 专线，7x24小时 AI 客服值守',
+        link: '/brands/weifeng/',
+      },
+    ],
+  },
+  {
+    title: '⏳ 买断不限时 · 永久不过期备用',
+    tag: '一次性流量包',
+    desc: '日常翻墙频率不高，不想每月按期续订浪费流量。买一次流量一直有效，直到用完为止。',
+    recommends: [
+      {
+        name: '光速云 (斯诺克147)',
+        badge: '爆款买断',
+        reason: '147元买断 247GB 永久不过期，单节点 2.5Gbps',
+        link: '/brands/guangsu/',
+      },
+      {
+        name: '星岛梦',
+        badge: '100元起',
+        reason: '100G/300G/1TB 永久包，全节点1倍率不限设备',
+        link: '/brands/xingdaomeng/',
+      },
+      {
+        name: '二猫云',
+        badge: '99元100G',
+        reason: '不过期流量包，IEPL 物理专线支撑',
+        link: '/brands/ermao/',
+      },
+    ],
+  },
+]
+---
+
+<div class="decision-section">
+  <div class="section-head">
+    <div class="section-head__title">
+      <span class="mono-label is-accent">Quick Recommendation Matrix</span>
+      <h2 class="t-h2">🎯 30 秒机场选型决策树</h2>
+    </div>
+    <span class="mono-label">按需匹配 · 拒绝多花冤枉钱</span>
+  </div>
+
+  <div class="decision-grid">
+    {
+      SCENARIOS.map((sc) => (
+        <div class="decision-card grain">
+          <div class="decision-card__head">
+            <span class="mono-label is-accent">{sc.tag}</span>
+            <h3 class="decision-card__title">{sc.title}</h3>
+            <p class="decision-card__desc">{sc.desc}</p>
+          </div>
+
+          <div class="decision-recommends">
+            <span class="mono-label recommend-label">实验室优选对齐方案:</span>
+            <div class="recommend-list">
+              {sc.recommends.map((rec) => (
+                <a href={rec.link} class="recommend-item">
+                  <div class="recommend-item__left">
+                    <strong>{rec.name}</strong>
+                    <span class="badge">{rec.badge}</span>
+                  </div>
+                  <span class="recommend-item__reason">{rec.reason}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .decision-section {
+    margin-top: var(--space-8);
+  }
+
+  .decision-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: var(--space-5);
+    margin-top: var(--space-5);
+  }
+
+  .decision-card {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .decision-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(232, 180, 88, 0.4);
+  }
+
+  .decision-card__title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--fg-1);
+    margin: var(--space-2) 0;
+  }
+
+  .decision-card__desc {
+    font-size: 13px;
+    color: var(--fg-2);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .decision-recommends {
+    margin-top: var(--space-4);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line-1);
+  }
+
+  .recommend-label {
+    font-size: 11px;
+    margin-bottom: var(--space-2);
+    display: block;
+  }
+
+  .recommend-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .recommend-item {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-decoration: none;
+    transition: background var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .recommend-item:hover {
+    background: var(--bg-3);
+    border-color: var(--accent);
+  }
+
+  .recommend-item__left {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .recommend-item__left strong {
+    font-size: 14px;
+    color: var(--fg-1);
+  }
+
+  .recommend-item__reason {
+    font-size: 12px;
+    color: var(--fg-3);
+  }
+</style>

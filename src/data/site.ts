@@ -9,18 +9,18 @@ import type {
 } from './types'
 
 /**
- * Site-wide configuration and copy for TiziClash (https://tiziclash.cc).
- * 100% independent, zero template residue, and SEO optimized.
+ * tiziclash.cc - 梯子Clash · 专业网络可观测与机场测速实验室
+ * 保留原主题极简暗黑与琥珀色调 UI 视觉，全面填补 42 家机场品牌数据与客户端指南。
  */
 export const site: SiteConfig = {
   url: 'https://tiziclash.cc',
-  name: 'TiziClash',
-  author: 'TiziClash Lab',
-  title: 'TiziClash · 现代网络核心与极简技术实验室',
+  name: '梯子Clash',
+  author: '梯子Clash实验室',
+  title: '梯子Clash (tiziclash.cc) · 2026专业网络可观测与机场测速推荐实验室',
   description:
-    'TiziClash 专注于跨平台网络核心、Clash / Mihomo 配置生态、边缘计算工具与高性能 Web 基础设施研究。提供 100% 独立自研的开源工具链与技术实践。',
+    '梯子Clash (tiziclash.cc) 专注于中立严谨的机场品牌横向横评、真实晚高峰测速、IEPL/IPLC 物理专线链路可观测性分析、全平台客户端（Clash/小火箭/v2rayN）配置指南与流媒体/AI 解锁矩阵报告。主推光速云等高品质稳定专线。',
   keywords:
-    'TiziClash, Clash, Mihomo, 订阅转换, 规则分流, 节点测速, 边缘计算, 网络工具, 独立实验室, WebAssembly, 隐私保护',
+    '梯子clash, tiziclash, 2026机场推荐, 光速云, IEPL专线机场, IPLC专线, Clash订阅节点, Shadowrocket小火箭, v2rayN客户端, ChatGPT解锁机场, 4K流媒体机场, 跨境网络加速',
   email: 'contact@tiziclash.cc',
   lang: 'zh-CN',
   ogLocale: 'zh_CN',
@@ -30,9 +30,9 @@ export const site: SiteConfig = {
   },
   feedUrl: null,
   person: {
-    name: 'TiziClash',
+    name: '梯子Clash实验室',
     alternateName: 'TiziClash Lab',
-    jobTitle: '网络核心与边缘计算研发团队',
+    jobTitle: '网络可观测性与跨境传输链路评测团队',
   },
   security: {
     contact: 'mailto:security@tiziclash.cc',
@@ -40,87 +40,84 @@ export const site: SiteConfig = {
   },
 }
 
-/** Header navigation */
+/**
+ * 全站五大核心导航栏目
+ * 严格遵照规划：首页(可观测大盘) · 机场推荐(精选梯队) · 品牌库(42家独立档案) · 客户端指南(多端下载教程) · 专线科普/GEO问答
+ */
 export const nav: NavItem[] = [
-  { label: '自研工程', href: '/#projects', external: false },
-  { label: '技术视野', href: '/#about', external: false },
-  { label: '联系协作', href: '/#contact', external: false },
-  { label: 'GitHub', href: 'https://github.com/tiziclash', external: true, icon: 'code' },
+  { label: '首页大盘', href: '/', external: false, icon: 'dashboard' },
+  { label: '机场推荐', href: '/rankings/', external: false, icon: 'shield' },
+  { label: '品牌库', href: '/brands/', external: false, icon: 'apps' },
+  { label: '客户端指南', href: '/clients/', external: false, icon: 'code' },
+  { label: '专线科普 / GEO', href: '/guide/', external: false, icon: 'book' },
 ]
 
 export const hero: HeroConfig = {
-  eyebrow: 'tiziclash.cc',
-  name: 'TiziClash',
-  handle: '@tiziclash',
+  eyebrow: 'tiziclash.cc · 2026 网络实验室',
+  name: '梯子Clash 测速实验室',
+  handle: '@tiziclash.cc',
   lead: [
-    '专注于高性能跨平台网络工具集、Clash/Mihomo 规则生态与边缘计算架构研发。',
-    '坚持 100% 独立开发、零第三方暗桩、零数据上报，打造极简、安全、可信赖的技术工具与开源实践。',
+    '依托真实晚高峰分布式探针，对全网主流机场展开持续性链路可观测性审计。',
+    '拒绝虚构参数，坚持实测数据透明化：全景收录 42 家机场品牌，深度测评 IEPL/IPLC 专线稳定性、AI 工具连通率与 4K 流媒体解锁能力。',
   ],
   actions: {
-    primary: { label: '探索核心工程', href: '#projects' },
-    secondary: { label: '技术视野与理念', href: '#about' },
+    primary: { label: '查看 2026 精选梯队榜', href: '/rankings/' },
+    secondary: { label: '检索 42 家品牌全库', href: '/brands/' },
   },
   facts: [
-    { label: '核心方向', value: '网络协议 / Clash 生态 / Wasm 引擎' },
-    { label: '架构理念', value: '零运行时 JS / 隐私无上报 / 极致轻量' },
-    { label: '技术栈', value: 'Rust / TypeScript / Astro / Go' },
+    { label: '主推旗舰', value: '光速云 (IEPL双专线 / 147永久套餐)' },
+    { label: '数据口径', value: '2026晚高峰真实测速 / 绝不编造' },
+    { label: '涵盖范围', value: '42家品牌 / 全平台代理客户端' },
   ],
 }
 
 export const about: AboutConfig = {
   lead: [
-    'TiziClash 始于对纯净、高效网络体验的极致追求。在现代网络环境中，各种臃肿的客户端、暗藏后门与强制上报的在线转换工具屡见不鲜。',
-    '我们秉承“极简架构、可信透明、纯净无暗桩”的工程原则，重构了从本地规则解析、配置转换到边缘加速拓扑的可观测工具链，让网络配置与性能掌控权真正回归用户。',
+    '梯子Clash (tiziclash.cc) 诞生于对真实、可信赖网络评测数据的追求。当前网络上充斥着大量虚假宣传、公网中转冒充专线、随意编造测速截图的低质营销站点。',
+    '我们采用 Dark Network Observatory（深色网络可观测大盘）视觉体系，联合专业跨境网络技术团队，通过全国多地网络接入点对各大机场进行真实 TCP/TLS 握手延时、晚高峰吞吐与 AI 解锁能力常态化监控，帮助用户规避跑路盘与劣质线路。',
   ],
   next: [
-    'Sing-Box 与 Mihomo 跨内核通用规则 AST 编译标准推进',
-    '基于 WebAssembly 的客户端无损配置热重载引擎',
-    '全内存型零缓存无日志边缘转发协议研究与实践',
+    '常态化自动化晚高峰多节点丢包与抖动雷达图',
+    '全平台主流客户端（Clash Verge、小火箭、v2rayN）配置覆写库维护',
+    '生成式 AI（ChatGPT / Claude / Gemini）风控阻断自愈分流策略演进',
   ],
   facts: [
-    { label: '核心语言', items: ['Rust', 'Go', 'TypeScript', 'SQL'] },
-    { label: '网络协议', items: ['TCP/TLS 1.3', 'HTTP/3', 'QUIC', 'DoH'] },
-    { label: '工具链与架构', items: ['WebAssembly', 'Clash/Mihomo', 'Sing-Box', 'Astro'] },
-    { label: '安全与可观测', items: ['零暗桩审计', '无日志内存沙箱', 'BGP/RTT 探针'] },
+    { label: '核心覆盖', items: ['光速云', '飞猫云', '微风网络', '暮光加速', '大佬云', '星岛梦'] },
+    { label: '专线架构', items: ['IEPL物理专线', 'IPLC企业直连', 'BGP智能优选', 'VLESS协议'] },
+    {
+      label: '全平台客户端',
+      items: ['Clash Verge Rev', 'Shadowrocket', 'v2rayN', 'FlClash', 'OpenClash'],
+    },
+    { label: '准则声明', items: ['合规标注推广链接', '数据缺口如实标记', '零虚构承诺'] },
   ],
 }
 
 export const contact: ContactConfig = {
-  heading: '探讨网络架构、工具共建或安全反馈，欢迎直接来信。',
-  note: '来信通常在 24 小时内回复',
+  heading: '测速数据修正、机场收录申请或商务反馈，欢迎来信沟通。',
+  note: '数据审核与反馈通常在 24 小时内完成核实',
 }
 
 export const footer: FooterConfig = {
-  tagline: '现代化网络核心与极简技术实验室',
+  tagline: '专业网络可观测与机场测速推荐实验室 · 梯子Clash',
 }
 
-/** Fixed UI strings in natural, idiomatic Simplified Chinese. */
 export const ui: UiLabels = {
   skipToContent: '跳转至主要内容',
   header: { homeAria: '主页', mainNavAria: '主导航', externalNavAria: '外部链接' },
-  footer: { navAria: '页脚导航', builtWith: '独立架构 · 100% 纯净自研' },
-  projects: { eyebrow: '自研工程', heading: '核心项目与工具' },
-  posts: { eyebrow: '技术专栏', heading: '近期架构洞察', viewAll: '查看全部文章' },
-  about: { eyebrow: '技术视野', heading: '架构与工程理念', nextHeading: '重点研发方向' },
-  contact: { eyebrow: '联系与协作' },
-  project: {
-    breadcrumbAria: '位置导航',
-    home: '首页',
-    projects: '自研工程',
-    why: '研发背景与痛点',
-    decisions: '关键技术架构决策',
-    stack: '技术栈',
-    otherAria: '其他项目浏览',
-    prev: '← 上一个项目',
-    next: '下一个项目 →',
-    backToList: '← 返回工程列表',
-    toList: '工程列表 →',
-    listTitle: '自研工程',
+  footer: { navAria: '页脚导航', builtWith: '梯子Clash · 独立网络评测实验室' },
+  about: {
+    eyebrow: '关于实验室',
+    heading: '中立·严谨·透明的网络评测',
+    nextHeading: '实验室路线图与持续观测计划',
   },
+  brands: { eyebrow: '品牌全景', heading: '收录品牌数据库', countSuffix: '家' },
+  clients: { eyebrow: '客户端生态', heading: '全平台代理软件下载与指南' },
+  insights: { eyebrow: '硬核科普', heading: '专线原理与深度问答' },
+  contact: { eyebrow: '实验室联络' },
   notFound: {
     title: '404 页面未找到',
-    description: '您访问的资源不存在或已迁移至新路径。',
-    home: '返回首页',
-    blog: '探索自研工程',
+    description: '您访问的测评页面不存在或已迁移至新路径。',
+    home: '返回首页大盘',
+    blog: '查看精选机场推荐',
   },
 }

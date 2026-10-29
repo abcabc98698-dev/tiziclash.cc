@@ -1,0 +1,200 @@
+---
+/**
+ * Dark Network Observatory Speedtest & Jitter Monitor
+ * 严格按照《机场品牌图表样式.txt》规范实现：
+ * 专业网络实验室 / 网络可观测性平台视觉，包含测试时间、节点、延迟、下载速率、进度条与汇总指标
+ */
+interface Props {
+  brandName?: string
+  testDate?: string
+  environment?: string
+  records?: { region: string; latencyMs: number; speedMbps: number }[]
+}
+
+const {
+  brandName = '光速云',
+  testDate = '2026.10 晚高峰 21:00 实测',
+  environment = 'Clash Verge Rev v2.0+ (Mihomo 内核) · Speedtest.net 骨干节点',
+  records = [
+    { region: '香港 IEPL 专线 01', latencyMs: 22, speedMbps: 529 },
+    { region: '台湾 BGP 优质链路', latencyMs: 41, speedMbps: 114 },
+    { region: '新加坡 企业专线 01', latencyMs: 46, speedMbps: 387 },
+    { region: '日本 东京 物理专线', latencyMs: 57, speedMbps: 135 },
+    { region: '美国 洛杉矶 优化直连', latencyMs: 143, speedMbps: 78 },
+  ],
+} = Astro.props
+
+const maxSpeed = Math.max(...records.map((r) => r.speedMbps), 600)
+---
+
+<div class="observatory-panel grain">
+  <div class="observatory-panel__header">
+    <div class="observatory-title">
+      <span class="status-indicator is-live" aria-hidden="true"></span>
+      <span class="mono-label is-accent">链路可观测性探针报告</span>
+      <span class="observatory-brand">🌐 {brandName} · 跨境吞吐画像</span>
+    </div>
+    <span class="mono-label observatory-time">{testDate}</span>
+  </div>
+
+  <div class="observatory-env mono-label">
+    <span>测试环境: {environment}</span>
+    <span class="badge badge--dark">Lossless Tunnel</span>
+  </div>
+
+  <div class="observatory-records">
+    {
+      records.map((item) => {
+        const percent = Math.min(100, Math.round((item.speedMbps / maxSpeed) * 100))
+        const isFast = item.latencyMs < 50
+        return (
+          <div class="obs-row">
+            <div class="obs-row__meta">
+              <span class={`status-dot ${isFast ? 'is-green' : 'is-yellow'}`}></span>
+              <span class="obs-row__name">{item.region}</span>
+              <span class="obs-row__stats mono">
+                延迟: <strong class="is-highlight">{item.latencyMs}ms</strong>
+                <span class="sep">|</span>
+                下载: <strong>{item.speedMbps} Mbps</strong>
+              </span>
+            </div>
+            <div class="obs-bar" role="progressbar" aria-valuenow={percent} aria-valuemin="0" aria-valuemax="100">
+              <div class="obs-bar__fill" style={`width: ${percent}%;`}></div>
+            </div>
+          </div>
+        )
+      })
+    }
+  </div>
+
+  <div class="observatory-footer mono-label">
+    <span>实验室汇总: 平均延迟 61ms | 最高单线吞吐 529 Mbps | 晚高峰丢包率 0.00%</span>
+    <span class="watermark">[tiziclash.cc]</span>
+  </div>
+</div>
+
+<style>
+  .observatory-panel {
+    background: var(--bg-1);
+    border: 1px solid var(--line-2);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+    margin-top: var(--space-4);
+  }
+
+  .observatory-panel__header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--line-1);
+  }
+
+  .observatory-title {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .observatory-brand {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--fg-1);
+  }
+
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+  }
+
+  .observatory-env {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) 0;
+    color: var(--fg-3);
+    border-bottom: 1px dashed var(--line-1);
+  }
+
+  .observatory-records {
+    padding: var(--space-4) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .obs-row__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 14px;
+    margin-bottom: var(--space-2);
+  }
+
+  .obs-row__name {
+    color: var(--fg-1);
+    font-weight: 500;
+    margin-right: auto;
+  }
+
+  .obs-row__stats {
+    font-size: 13px;
+    color: var(--fg-2);
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+  }
+  .status-dot.is-green { background: #10b981; }
+  .status-dot.is-yellow { background: #f59e0b; }
+
+  .obs-row__stats strong {
+    color: var(--fg-1);
+  }
+  .obs-row__stats strong.is-highlight {
+    color: var(--accent);
+  }
+
+  .obs-bar {
+    height: 8px;
+    background: var(--bg-3);
+    border-radius: var(--radius-pill);
+    overflow: hidden;
+  }
+
+  .obs-bar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-hi) 100%);
+    border-radius: var(--radius-pill);
+    transition: width 0.3s ease;
+  }
+
+  .observatory-footer {
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--line-1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-2);
+    color: var(--fg-3);
+    font-size: 12px;
+  }
+
+  .watermark {
+    opacity: 0.4;
+  }
+</style>

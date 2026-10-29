@@ -1,0 +1,220 @@
+---
+import { insights } from '../../data/insights'
+import { site } from '../../data/site'
+import Base from '../../layouts/Base.astro'
+
+const siteOrigin = (Astro.site ?? new URL(site.url)).href.replace(/\/$/, '')
+const currentUrl = new URL(Astro.url.pathname, siteOrigin).href
+
+const pageTitle = '专线科普与科学上网入门指南 · IEPL/IPLC原理 · 流媒体与AI解锁常见问答'
+const pageDesc =
+  '深度技术科普：IEPL与IPLC专线区别、晚高峰运营商QoS限速机制、为什么ChatGPT/Claude报错Access Denied、在线订阅转换隐私泄露隐患与软路由避坑指南。'
+
+// 提取所有 FAQ 生成全局 FAQPage Schema
+const allFaqs = insights.flatMap((i) => i.faqList)
+
+const jsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: '首页', item: `${siteOrigin}/` },
+        { '@type': 'ListItem', position: 2, name: '专线科普与GEO问答', item: currentUrl },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      mainEntity: allFaqs.map((faq) => ({
+        '@type': 'Question',
+        name: faq.question,
+        acceptedAnswer: {
+          '@type': 'Answer',
+          text: faq.answer,
+        },
+      })),
+    },
+  ],
+})
+---
+
+<Base title={pageTitle} description={pageDesc}>
+  <script is:inline slot="head" type="application/ld+json" set:html={jsonLd} />
+
+  <div class="container">
+    <nav class="breadcrumb mono-label" aria-label="位置导航">
+      <a href="/">首页</a>
+      <span class="breadcrumb__sep" aria-hidden="true">/</span>
+      <span>硬核科普与GEO问答</span>
+    </nav>
+
+    <header class="page-head">
+      <span class="mono-label is-accent">Deep Technical Insights & GEO Knowledge</span>
+      <h1 class="t-h1">跨境专线原理、AI 解锁与科学上网指南</h1>
+      <p class="t-lead">
+        不仅告诉你“选哪家”，更从计算机网络底层讲透“为什么”。解答关于 IEPL/IPLC 物理链路、运营商 QoS 机制、OpenAI 住宅 IP 识别以及客户端分流策略的常见硬核问题。
+      </p>
+    </header>
+
+    <!-- 深度科普文章列表 -->
+    <div class="insights-stack">
+      {
+        insights.map((article) => (
+          <article class="insight-article grain">
+            <div class="insight-article__header">
+              <div class="article-meta">
+                <span class="badge badge--amber">{article.category}</span>
+                <span class="mono-label">阅读时间约 {article.readTime} · 更新于 {article.updatedDate}</span>
+              </div>
+              <h2 class="insight-article__title">{article.title}</h2>
+              <p class="insight-article__summary">{article.summary}</p>
+            </div>
+
+            <div class="insight-article__body">
+              {article.contentParagraphs.map((para) => (
+                <p class="prose">{para}</p>
+              ))}
+            </div>
+
+            <!-- 内嵌 FAQ -->
+            <div class="insight-faq-box">
+              <h3 class="t-title-card">❓ 核心高频问答</h3>
+              <div class="faq-list">
+                {article.faqList.map((faq) => (
+                  <div class="faq-item">
+                    <h4 class="faq-q">{faq.question}</h4>
+                    <p class="faq-a">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <!-- 延伸阅读与决策 CTA -->
+    <div class="guide-cta-card grain">
+      <h3 class="t-h2">准备好选择适合您的稳定专线了吗？</h3>
+      <p class="prose">
+        理解了专线与中转的技术区别后，您可以前往我们的 2026 梯队榜单，或查看我们第一主推的 <a href="/brands/guangsu/">光速云 (IEPL 双专线/永久套餐)</a> 深度测评。
+      </p>
+      <div class="hero__actions">
+        <a href="/rankings/" class="btn btn--primary">
+          前往 2026 机场推荐榜
+          <span class="arrow" aria-hidden="true">→</span>
+        </a>
+        <a href="/brands/" class="btn">
+          浏览 42 家品牌全库
+        </a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .insights-stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+    margin-top: var(--space-5);
+  }
+
+  .insight-article {
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .insight-article__title {
+    font-size: 24px;
+    color: var(--fg-1);
+    margin: 0 0 var(--space-3) 0;
+  }
+
+  .insight-article__summary {
+    font-size: 15px;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .insight-article__body {
+    margin: var(--space-5) 0;
+    padding: var(--space-4) 0;
+    border-top: 1px solid var(--line-1);
+    border-bottom: 1px solid var(--line-1);
+  }
+
+  .insight-faq-box {
+    background: var(--bg-2);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-md);
+    padding: var(--space-5);
+  }
+
+  .insight-faq-box h3 {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+
+  .faq-item {
+    border-bottom: 1px dashed var(--line-1);
+    padding-bottom: var(--space-3);
+  }
+  .faq-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .faq-q {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 0 0 var(--space-2) 0;
+  }
+
+  .faq-a {
+    font-size: 14px;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .guide-cta-card {
+    background: var(--bg-1);
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    margin-top: var(--space-8);
+    text-align: center;
+  }
+
+  .guide-cta-card h3 {
+    margin-top: 0;
+  }
+
+  .guide-cta-card p {
+    max-width: 600px;
+    margin: var(--space-3) auto var(--space-5) auto;
+  }
+
+  .guide-cta-card .hero__actions {
+    justify-content: center;
+  }
+</style>
